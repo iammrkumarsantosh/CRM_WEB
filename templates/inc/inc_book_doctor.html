@@ -1,0 +1,629 @@
+<div class="content-wrapper">
+  <!-- Content -->
+  <div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">Book Doctor</h4>
+    <input type="hidden" name="employee_id" value="{{employee_id}}" />
+    <!-- Basic Layout & Basic with Icons -->
+    <div style="padding-bottom: 15px">
+      <a href="/portal/dashboard">&#8592; back</a>
+    </div>
+    <div class="row">
+      <div class="col-xxl">
+        <div class="card">
+          <div class="table-responsive text-nowrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>UHID / Date</th>
+                  <th>Patient Information</th>
+                </tr>
+              </thead>
+              <tbody class="table-border-bottom-0">
+                {% for obj in view_data.list %}
+                <tr>
+                  <td valign="top">
+                    <input
+                      type="hidden"
+                      name="puid"
+                      id="puid"
+                      value="{{obj.id}}"
+                    />
+                    <strong style="color: #0a6b4c; cursor: pointer">
+                      <!---->
+                      {% if obj.patent_uhid != '0' %}
+                      <!---->
+                      {{obj.patent_uhid}}
+                      <!---->
+                      {% if obj.old_uhid != '0' %}
+                      <!---->
+                      <br /><s>{{obj.old_uhid}}</s>
+                      <!---->
+                      {% endif %}
+                      <br />
+                      {% endif%}
+                      <!---->
+                    </strong>
+                    <!---->
+                    {{obj.date}}
+                    <!---->
+                    <br/>
+                    <br/>
+                    <br/>
+                    <a href="/portal/dashboard/?page=editinfo&uhid={{obj.id}}"><b>Edit Details</b></a>
+                  </td>
+                  <td>
+                    <strong>
+                      <!---->
+                      {{obj.first_name}}
+                      <!---->
+                      {% if obj.last_name != '-' %}
+                      <!---->
+                      {{obj.last_name}}
+                      <!---->
+                      {% endif%}
+                    </strong>
+                    <!---->
+                    {% if obj.gender != '-' %}
+                    <!---->
+                    <br />
+                    <!---->
+                    Gender : <b>{{obj.gender}}</b>
+                    <!---->
+                    {% endif%}
+                    <!---->
+                    {% if obj.age != 0 %}
+                    <!---->
+                    , Age : <b>{{obj.age}} Years</b>
+                    <!---->
+                    {% endif%}
+                    <!---->
+                    <br />
+                    <!---->
+                    Email : <b>{{obj.email}}</b>, Occupation :
+                    <b>{{obj.occupation}}</b>, Marital Status :
+                    <b>{{obj.marital_status}}</b>, Religion :
+                    <b>{{obj.religion}}</b>, Blood Group :
+                    <b>{{obj.blood_group}}</b>
+                    <!---->
+                    <b>
+                      {% if obj.mobile != '0' %}
+                      <!---->
+                      <br />
+                      <!---->
+                      {{obj.mobile}}
+                      <!---->
+                      {% endif%}
+                      <!---->
+                      {% if obj.alt_mobile != '0' %}
+                      <!---->
+                      , {{obj.alt_mobile}}
+                      <!---->
+                      {% endif%}
+                    </b>
+                    <!---->
+                    {% if obj.care_of_type != 0 or obj.care_of %}
+                    <br />
+                    {% if obj.care_of_type != 0 %}
+                    <!---->
+                    {{obj.care_of_type}},
+                    <!---->
+                    {% elif obj.care_of != '-' %}
+                    <!---->
+                    Parents :
+                    <!---->
+                    {% endif %}
+                    <!---->
+                    {% if obj.care_of != '-' %}
+                    <!---->
+                    {{obj.care_of}}
+                    <!---->
+                    {% endif %}
+                    <!---->
+                    {% endif %}
+                    <!---->
+                    <br />Address :
+                    <!---->
+                    {% if obj.address != '-' %}
+                    <!---->
+                    {{obj.address}}
+                    <!---->
+                    {% endif %}
+                    <!---->
+                    <br />
+                    <!---->
+                    {% if obj.city != '-' %}
+                    <!---->
+                    {{obj.city}},
+                    <!---->
+                    {% endif %}
+                    <!---->
+                    {% if obj.state != '-' %}
+                    <!---->
+                    {{obj.state}},
+                    <!---->
+                    {% endif %}
+                    <!---->
+                    {% if obj.country != '-' %}
+                    <!---->
+                    {{obj.country}}
+                    <!---->
+                    {% endif %}
+                    <!---->
+                    {% if obj.pin_code != '0' %}
+                    <!---->
+                    - {{obj.pin_code}}
+                    <!---->
+                    {% endif %}
+                    <br /><br />
+                    <b>Medical Information</b><br />
+                    <!---->
+                    {% if obj.referral_number != '0' %}
+                    <!---->
+                    Referral : {{obj.referral_number}}
+                    <!---->
+                    - {{obj.referral_date}}<br />
+                    <!---->
+                    {% endif %}
+                    <!---->
+                    {% if obj.disease != 0 %}
+                    <!---->
+                    Disease : {{obj.disease}}<br />
+                    <!---->
+                    {% endif %}
+                    <!---->
+                    {% if obj.health_card_type != 0 %}
+                    <!---->
+                    {{obj.health_card_type}}
+                    <!---->
+                    {% endif %}
+                    <!---->
+                    {% if obj.health_card_category != 0 %}
+                    <!---->
+                    <br />{{obj.health_card_category}}
+                    <!---->
+                    {% endif %}
+                    <!---->
+                    {% if obj.health_card_number != '0' %}
+                    <!---->
+                    {% if obj.health_card_number != '-' %}
+                    <!---->
+                    - {{obj.health_card_number}}
+                    <!---->
+                    {% endif %}
+                    <!---->
+                    {% endif %}
+                    <br /><br />
+                    {% if obj.patient_trt_list|length %}
+                    <table class="table table-bordered trt_data">
+                      <thead style="background-color: #0a6b4c">
+                        <tr>
+                          <th style="color: #fff">Treatment ID</th>
+                          <th style="color: #fff">Date</th>
+                          <th style="color: #fff">Time</th>
+                          <th style="color: #fff">Therapy</th>
+                          <th style="color: #fff">Treatment Status</th>
+                          <th style="color: #fff">Bill Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for t in obj.patient_trt_list %}
+                        <tr>
+                          <td>{{t.id}}</td>
+                          <td>{{t.startdate}}</td>
+                          <td>{{t.time}}</td>
+                          <td>{{t.therapy_name}}</td>
+                          <td>{{t.status_name}}</td>
+                          <td>{{t.billing_status_name}}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                    {% endif %}
+                    <br /><br />
+                    {% if obj.pay_list|length %}
+                    <table class="table table-bordered trt_data">
+                      <thead style="background-color: #0a6b4c">
+                        <tr>
+                          <th style="color: #fff">Date</th>
+                          <th style="color: #fff">Payment Type</th>
+                          <th style="color: #fff">Amount</th>
+                          <th style="color: #fff">Payment Mode</th>
+                          <th style="color: #fff">transaction Number</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for t in obj.pay_list %}
+                        <tr>
+                          <td>{{t.date}}</td>
+                          <td>{{t.title}}</td>
+                          <td>{{t.fee}}</td>
+                          <td>{{t.payment_type}}</td>
+                          <td>{{t.transaction_num}}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                    {% endif %}
+                    <br />
+                    <!---->
+                    <table
+                      class="table table-bordered trt_data"
+                      id="T{{obj.id}}"
+                    >
+                      <thead style="background-color: #0a6b4c">
+                        <tr>
+                          <th style="color: #fff">Date / OPD No</th>
+                          <th style="color: #fff">IPD No</th>
+                          <th style="color: #fff">Disease / Doctor</th>
+                          <th style="color: #fff">Remark</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for t in obj.treatment %}
+                        <tr>
+                          <td>
+                            {{t.datetime}} <br />
+                            OPD No : {{t.opd_no}}
+                          </td>
+                          <td id="ipd{{t.id}}">
+                            {%if t.is_shift_valid == 1 %}
+                            <!---->
+                            <input
+                              type="checkbox"
+                              id="is_shift_ipd"
+                              value="1"
+                            />
+                            <label for="is_shift_ipd">Shift to IPD</label>
+                            <!---->
+                            {% else %}
+                            <!---->
+                            {{t.ipd_no}}
+                            <!---->
+                            {% endif %}
+                          </td>
+                          <td>
+                            Symptoms : {{t.disease_name}}
+                            <br />
+                            BP : {{t.bp}}
+                            <br />
+                            Sugar : {{t.sugar}}
+                            <br />
+                            Weight : {{t.weight}}
+                            <br />
+                            Doctor : {{t.doctor}}
+                            {% if obj.health_card_type != 'Normal OPD' %}
+                            <br/>
+                            Referral : {{t.referral_number}} / {{t.referral_date}}
+                            <br/>
+                            <a href="javascript:void()" onclick="showRef('{{t.id}}')">Update Referral</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            <!---->
+                            {% if t.is_complete == 0 %}
+                            <!---->
+                            <textarea
+                              id="remark"
+                              class="form-control"
+                              name="remark"
+                            >{{t.remark}}</textarea>
+                            <input
+                              type="checkbox"
+                              id="is_complete{{t.id}}"
+                              value="1"
+                            />
+                            <label for="is_complete{{t.id}}"
+                              >Check up done</label
+                            ><br /><br />
+                            <button
+                              type="button"
+                              class="btn btn-primary"
+                              onclick="saveRemark('{{t.id}}')"
+                            >
+                              <b>Save</b>
+                            </button>
+                            <!---->
+                            {% endif %}
+                            <!---->
+                            {% if t.remark != '-' and t.is_complete == 1 %}
+                            <!---->
+                            {{t.remark}} <br />
+                            <b>Check up done</b>
+                            <!---->
+                            {% endif %}
+                            <!---->
+                            {% if t.medicine != 0 %}
+                            <!---->
+                            <br />Medicine - {{t.medicine}} <br />
+                            <!---->
+                            {% endif %}
+                            <!---->
+                            {% if t.therapy != 0 %}
+                            <!---->
+                            Therapy - {{t.therapy}}
+                            <!---->
+                            {% endif %}
+                          </td>
+                         </tr>
+                          <tr id="ref_tr_{{t.id}}" class="referral_tr" style="display:none;">
+                            <td align="left" style="background-color: #cff68d;">Update Referral</td>
+                            <td align="left" style="background-color: #cff68d;">
+                              <label>Referral Number</label><br/>
+                              <input
+                              type="text"
+                              class="form-control"
+                              id="ref_number{{t.id}}"
+                              value="{{t.referral_number}}"
+                            />
+                            <i id="ref_number_error{{t.id}}" style="font-size: 11px; color:#ff0000; display: none;">Input is mandatory</i>
+                          </td>
+                            <td align="left" style="background-color: #cff68d;">
+                              <label>Referral Date</label><br/>
+                              <input
+                              type="date"
+                              class="form-control"
+                              id="ref_date{{t.id}}"
+                              value="{{t.referral_date}}"
+                            />
+                            <i id="ref_date_error{{t.id}}" style="font-size: 11px; color:#ff0000; display: none;">Input is mandatory</i>
+                          </td>
+                            <td align="left" style="background-color: #cff68d;"><button
+                              type="button"
+                              class="btn btn-primary"
+                              onclick="updateReferral('{{t.id}}')"
+                            >
+                              <b>Update Referral</b>
+                            </button></td>
+                        </tr>                        
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                    <div
+                      style="
+                        padding: 20px;
+                        background-color: #e7e7ff;
+                        margin-top: 20px;
+                      "
+                    >
+                      <form
+                        method="post"
+                        action="{% url 'fileUpload' %}"
+                        enctype="multipart/form-data"
+                      >
+                        {% csrf_token %}
+                        <div style="padding-bottom: 20px">
+                          Attachment<br />
+                          {% for doc in obj.doc_list %}
+                          <a href="{{doc.file_name}}" target="_blank">
+                            <!---->
+                            <i class="menu-icon tf-icons bx bx-file"></i>
+                            {{doc.remark}} {{doc.date}}
+                            <!---->
+                          </a>
+                          <!---->
+                          &nbsp;&nbsp;
+                          <!---->
+                          {% endfor %}
+                        </div>
+                        Upload Document<br />
+                        <input
+                          type="hidden"
+                          name="pid"
+                          value="{{request.GET.uhid}}"
+                        />
+                        <input
+                          type="text"
+                          name="remark"
+                          value=""
+                          placeholder="document name"
+                        />
+                        <input type="file" name="myfile" />
+                        <button class="btn btn-primary" type="submit">
+                          Upload
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+    <br />
+    {% if user_type.id != 8 and user_type.id != 7 %}
+    <div class="row">
+      <div class="col-xxl">
+        <div class="card mb-4" style="padding: 20px">
+          <div class="row">
+            <div class="col-sm-3" style="margin-bottom: 20px">
+              <label class="col-sm-3 form-label" for="bp">BP*</label>
+              <input type="text" class="form-control" id="bp" name="bp" />
+            </div>
+            <div class="col-sm-3" style="margin-bottom: 20px">
+              <label class="col-sm-3 form-label" for="sugar">Sugar*</label>
+              <input type="text" class="form-control" id="sugar" name="sugar" />
+            </div>
+            <div class="col-sm-3" style="margin-bottom: 20px">
+              <label class="col-sm-3 form-label" for="weight">Weight*</label>
+              <input
+                type="text"
+                class="form-control"
+                id="weight"
+                name="weight"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-5">
+              <label class="col-sm-3 form-label" for="doctor_id">Doctor*</label>
+              <select class="form-select" id="doctor_id" name="doctor_id">
+                {% for obj in doctor_list %}
+                <option value="{{obj.id}}">
+                  Dr. {{obj.first_name}}
+                  <!---->
+                  {% if obj.last_name != '-' %}
+                  <!---->
+                  {{obj.last_name}}
+                  <!---->
+                  {% endif %}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-sm-5">
+              <label class="col-sm-3 form-label" for="doctor_id"
+                >Symptoms*</label
+              >
+              <select class="form-select" id="symptoms" name="symptoms">
+                {% for obj in disease %}
+                <option value="{{obj.id}}">{{obj.name}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-sm-2" style="padding-top: 30px">
+              <button
+                type="button"
+                class="btn btn-primary"
+                onclick="bookDoctorApt()"
+              >
+                Book
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-3" style="margin-top: 20px">
+              <label class="form-label" for="referral_number">Referral Number</label><br/>
+              <input type="text" class="form-control" id="referral_number" name="referral_number"/>
+            </div>
+            <div class="col-sm-3" style="margin-top: 20px">
+              <label class="form-label" for="referral_date">Referral Date</label><br/>
+              <input type="date" class="form-control" id="referral_date" name="referral_date" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  <!-- / Content -->
+  <div class="content-backdrop fade"></div>
+</div>
+<script type="text/javascript">
+  function showRef(id){
+    var divsToHide = document.getElementsByClassName("referral_tr");
+    for(var i = 0; i < divsToHide.length; i++){
+        divsToHide[i].style.display = "none";
+    }
+    document.querySelector("#ref_tr_"+id).style.display="";
+  }
+  function updateReferral(id){
+    var ref_num = document.querySelector("#ref_number"+id).value;
+    var ref_dat = document.querySelector("#ref_date"+id).value;
+    if(ref_num.length > 0 && ref_num != "0"){
+      document.querySelector("#ref_number_error"+id).style.display="none";
+      if(ref_dat.length == 0){
+        document.querySelector("#ref_date_error"+id).style.display="inline";
+      }else{
+        document.querySelector("#ref_date_error"+id).style.display="none";
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function () {
+          window.location.href =
+            "/portal/dashboard/?page=bookdoctor&uhid={{request.GET.uhid}}";
+        };
+        xhttp.open(
+          "GET",
+          "/portal/updateReferralStatus/?rn="+
+            ref_num +
+            "&em={{employee_id}}" +            
+            "&rd=" +
+             ref_dat+
+            "&id=" +
+            id,
+          true
+        );
+        xhttp.send();
+      }
+    }else{
+      document.querySelector("#ref_number_error"+id).style.display="inline";
+    }
+  }
+  function saveRemark(id) {
+    var remark = document.querySelector("#remark").value;
+    var shift_ipd = 0;
+    var complete = 0;
+    if (document.querySelector("#is_shift_ipd")) {
+      var is_shift_ipd = document.querySelector("#is_shift_ipd").checked;
+      if (is_shift_ipd) {
+        shift_ipd = 1;
+      }
+    }
+    var is_complete = document.querySelector("#is_complete" + id).checked;
+    if (is_complete) {
+      complete = 1;
+    }
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function () {
+      window.location.href =
+        "/portal/dashboard/?page=bookdoctor&uhid={{request.GET.uhid}}";
+    };
+    xhttp.open(
+      "GET",
+      "/portal/updateTreatmentStatus/?complete=" +
+        complete +
+        "&shift_ipd=" +
+        shift_ipd +
+        "&remark=" +
+        remark +
+        "&id=" +
+        id,
+      true
+    );
+    xhttp.send();
+  }
+  function bookDoctorApt() {
+    var doctor_id = document.querySelector("#doctor_id").value;
+    var puid = document.querySelector("#puid").value;
+    var symptoms = document.querySelector("#symptoms").value;
+    var bp = document.querySelector("#bp").value;
+    var sugar = document.querySelector("#sugar").value;
+    var weight = document.querySelector("#weight").value;
+    var referral_number = document.querySelector("#referral_number").value;
+    var referral_date = document.querySelector("#referral_date").value;
+    if(referral_number.length == 0){
+      referral_number = "0";
+    }
+    if(referral_date.length == 0){
+      referral_date = "0";
+    }
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function () {
+      window.location.href =
+        "/portal/dashboard/?page=bookdoctor&uhid={{request.GET.uhid}}";
+    };
+    xhttp.open(
+      "GET",
+      "/portal/booked/?doctor_id=" +
+        doctor_id +
+        "&puid=" +
+        puid +
+        "&symptoms=" +
+        symptoms +
+        "&bp=" +
+        bp +
+        "&sugar=" +
+        sugar +
+        "&weight=" +
+        weight+
+        "&referral_number=" +
+        referral_number +
+        "&referral_date=" +
+        referral_date,
+      true
+    );
+    xhttp.send();
+  }
+</script>

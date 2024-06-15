@@ -1,0 +1,239 @@
+<form
+  action="{% url 'addnewemp' %}"
+  method="POST"
+  enctype="multipart/form-data"
+  onsubmit="return validateForm()"
+>
+  {% csrf_token %}
+  <div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+      {% if request.GET.edit is not None %}
+      <h4 class="fw-bold py-3 mb-4">Update Employee Details</h4>
+      <input type="hidden" name="edit_id" value="{{request.GET.edit}}" />
+      {% else %}
+      <h4 class="fw-bold py-3 mb-4">Add New Employee</h4>
+      <input type="hidden" name="edit_id" value="0" />
+      {% endif %}
+      <!---->
+      {% if error == "y" %}
+      <div class="alert alert-danger" role="alert">Username Already Exist.</div>
+      {% endif %}
+      <div
+        class="alert alert-danger"
+        role="alert"
+        id="errorBlock"
+        style="display: none"
+      >
+        Please select all mandatory fields.
+      </div>
+      <input type="hidden" name="employee_id" value="{{employee_id}}" />
+      <!-- Basic Layout & Basic with Icons -->
+      <div class="row">
+        <!-- Basic Layout -->
+        <div class="col-xxl">
+          <div class="card mb-4">
+            <div
+              class="card-header d-flex align-items-center justify-content-between"
+            >
+              <h5 class="mb-0">Login Details</h5>
+              <small class="text-muted float-end">* mandatory fields</small>
+            </div>
+            <div class="card-body">
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="emp_type"
+                  >Employee Type*</label
+                >
+                <div class="col-sm-9">
+                  <select class="form-select" id="emp_type" name="emp_type">
+                    <option value="5">Call Center Employee</option>
+                    <option value="6">Champion</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="username"
+                  >Username*</label
+                >
+                <div class="col-sm-9">
+                  <div class="input-group input-group-merge">
+                    <span class="input-group-text"
+                      ><i class="bx bx-user"></i
+                    ></span>
+                    {% if request.GET.edit is not None %}
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="username"
+                      name="username"
+                      value="{{view_data.username}}"
+                      disabled
+                      style="background-color: #fff"
+                    />
+                    {% else %}
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="username"
+                      name="username"
+                      value="{{view_data.username}}"
+                    />
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="password"
+                  >Password*</label
+                >
+                <div class="col-sm-9">
+                  <div class="input-group input-group-merge">
+                    <div class="input-group input-group-merge">
+                      <span class="input-group-text"
+                        ><i class="bx bx-key"></i
+                      ></span>
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        name="password"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <h5 class="mb-0">Employee Details</h5>
+              <br />
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="first_name"
+                  >First Name*</label
+                >
+                <div class="col-sm-9">
+                  <div class="input-group input-group-merge">
+                    <span class="input-group-text"
+                      ><i class="bx bx-user"></i
+                    ></span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="first_name"
+                      name="first_name"
+                      value="{{view_data.first_name}}"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="last_name"
+                  >Last Name*</label
+                >
+                <div class="col-sm-9">
+                  <div class="input-group input-group-merge">
+                    <span class="input-group-text"
+                      ><i class="bx bx-user"></i
+                    ></span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="last_name"
+                      name="last_name"
+                      value="{{view_data.last_name}}"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="gender"
+                  >Gender*</label
+                >
+                <div class="col-sm-4">
+                  <select class="form-select" id="gender" name="gender">
+                    <option value="0" selected>Select</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div align="right" class="col-sm-2 col-form-label">Mobile*</div>
+                <div class="col-sm-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="mobile"
+                    name="mobile"
+                    value="{{view_data.mobile}}"
+                  />
+                </div>
+              </div>
+              <div align="right" class="row justify-content-end">
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Basic with Icons -->
+        <div class="col-xxl"></div>
+      </div>
+    </div>
+    <!-- / Content -->
+    <div class="content-backdrop fade"></div>
+  </div>
+</form>
+{% if request.GET.edit is not None %}
+<script type="text/javascript">
+  document.querySelector("#emp_type").value = "{{view_data.user_type}}";
+  document.querySelector("#gender").value = "{{view_data.gender}}";
+  function validateForm() {
+    var mobile = document.querySelector("#mobile").value;
+    var first_name = document.querySelector("#first_name").value;
+    var last_name = document.querySelector("#last_name").value;
+    var username = document.querySelector("#username").value;
+
+    var error = false;
+    if (
+      mobile.length != 10 ||
+      first_name.length == 0 ||
+      last_name.length == 0 ||
+      username.length == 0
+    ) {
+      error = true;
+    }
+    if (error) {
+      document.querySelector("#errorBlock").style.display = "";
+    } else {
+      document.querySelector("#errorBlock").style.display = "none";
+    }
+    return !error;
+  }
+</script>
+{% else %}
+<script type="text/javascript">
+  function validateForm() {
+    var mobile = document.querySelector("#mobile").value;
+    var first_name = document.querySelector("#first_name").value;
+    var last_name = document.querySelector("#last_name").value;
+    var username = document.querySelector("#username").value;
+    var password = document.querySelector("#password").value;
+
+    var error = false;
+    if (
+      mobile.length != 10 ||
+      first_name.length == 0 ||
+      last_name.length == 0 ||
+      username.length == 0 ||
+      password.length == 0
+    ) {
+      error = true;
+    }
+    if (error) {
+      document.querySelector("#errorBlock").style.display = "";
+    } else {
+      document.querySelector("#errorBlock").style.display = "none";
+    }
+    return !error;
+  }
+</script>
+{% endif %}

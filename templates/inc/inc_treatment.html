@@ -1,0 +1,437 @@
+<!-- Content wrapper -->
+<div class="content-wrapper">
+  <!-- Content -->
+  <div class="container-xxl flex-grow-1 container-p-y">
+    <!-- -->
+    {% if user_type.id == 9 %}
+    <h4 class="fw-bold py-3 mb-4">Therapy Billing</h4>
+    {% else %}
+    <h4 class="fw-bold py-3 mb-4">Therapy</h4>
+    {% endif %}
+    {% if view_data.uhid is None and request.GET.p is not None %}
+    <div
+        class="alert alert-danger"
+        role="alert"
+        id="errorBlock"
+      >
+        No Data found!
+      </div>
+    {% endif %}  
+    <div class="card">
+      <div class="table-responsive text-nowrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>UHID</th>
+              <th>
+                {% if view_data.uhid is not None %}
+                <!---->
+                Full Name
+                <!---->
+                {% endif %}
+              </th>
+              <th>
+                {% if view_data.uhid is not None %}
+                <!---->
+                Patient Type
+                <!---->
+                {% endif %}
+              </th>
+              <th>
+                {% if view_data.uhid is not None %}
+                <!---->
+                Referral status
+                <!---->
+                {% endif %}
+              </th>
+            </tr>
+          </thead>
+          <tbody class="table-border-bottom-0">
+            <tr>
+              <td width="200">
+                <div class="input-group input-group-merge">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="uhid"
+                  name="uhid"
+                  value="{{request.GET.p}}"
+                />
+                <span class="input-group-text"
+                      ><i class="bx bx-search"></i
+                    ></span>
+                    </div>
+              </td>
+              <td>{{view_data.full_name}}
+                {% if view_data.uhid is not None %}
+                <br/><a style="font-size:11px;font-weight:bold;" href="/portal/dashboard/?page=bookdoctor&uhid={{view_data.patient_id}}">View Patient / Add Referral</a>
+                {% endif %}
+              </td>
+              <td>
+                {{view_data.hct_name}}
+              </td>
+              <td>{{view_data.ref_status}}</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+      {% if view_data.uhid is not None %}
+      <div class="card" style="margin-top: 50px">
+        <div class="table-responsive text-nowrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>S.N.</th>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Therapy</th>
+                <th>Therapy Status</th>
+                <th>Billing Status</th>
+                <th>Billing Date</th>
+                {% if user_type.id == 9 %}
+                <th></th>
+                {% endif %}
+              </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+              {% for obj in view_data.patient_treatment %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{obj.id}}</td>
+                <td>{{obj.startdate}}</td>
+                <td>{{obj.time}}</td>
+                <td>
+                    {% for t in therapy_set_list %}
+                    <!---->
+                    {% if t.id == obj.therapy %}
+                    <!---->
+                    {{t.name}}
+                    <!---->
+                    {% endif %}
+                    <!---->
+                    {% endfor %}
+                </td>
+                <td>
+                  {% if obj.status == 1 %}
+                  <div style="background-color: #0a6b4c;text-align: center;padding: 5px 0px;font-weight: bold;color: #fff;">Runing</div>
+                  {% endif %}
+                  {% if obj.status == 2 %}
+                  <div style="background-color: #ffffcc;text-align: center;padding: 5px 0px;font-weight: bold;">Completed</div>
+                  {% endif %}
+                </td>
+                <td>
+                    {% if obj.billing_status == 0 and user_type.id == 9 %}
+                    <!---->
+                    <select class="form-select" id ="{{obj.id}}_sl">
+                        <option value="0">Pending</option>
+                        <option value="1">Complete</option>
+                      </select>
+                    {% else %}
+                    <!---->
+                    {% if obj.billing_status == 0 %}
+                    <!---->
+                    Pending
+                    <!---->
+                    {% else %}
+                    <!---->
+                    Complete
+                    <!---->
+                    {% endif %}
+                    <!---->
+                    {% endif %}
+                </td>
+                <td>
+                    {% if obj.billing_status == 0 and user_type.id == 9 %}
+                    <!---->
+                    <input
+                        type="date"
+                        class="form-control"
+                        id ="{{obj.id}}_cl" />
+                        <i id="{{obj.id}}-error" style="color:#ff0000; font-size: 11px;display: none;">Mandatory Input</i>
+                    {% else %}
+                    {% if obj.billing_status == 1 %}
+                    <!---->
+                    {{obj.billing_date}}
+                    {% else %}
+                    <!---->
+                    N.A
+                    <!---->
+                    {% endif %}
+                    <!---->
+                    {% endif %}
+                </td>
+                {% if user_type.id == 9 %}
+                    <td>
+                        {% if obj.billing_status == 0 %}
+                        <button type="submit" class="btn btn-primary" onclick="billing('{{obj.id}}')">Submit</button>
+                        {% endif %}
+                    </td>
+                {% endif %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div> 
+      {% if user_type.id == 7 %}
+      <div style="padding:10px">
+      <a href="javascript:void()" id="L1" onclick="addTherapyBox()">add therapy</a>
+      <a href="javascript:void()" id="L2" onclick="removeTherapyBox()" style="display: none;">hide</a>
+      </div> 
+      <div class="card" id="B1" style="margin-top: 10px; display: none;">
+        <div class="table-responsive text-nowrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Therapy</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+              <tr>
+                <td width="200">
+                <input
+                  type="date"
+                  class="form-control"
+                  id="date"
+                  name="date"
+                />
+                <i id="date-error" style="color:#ff0000; font-size: 11px;display: none;">Mandatory Input</i>
+                </td>
+                <td width="200">
+                  <input
+                    type="time"
+                    class="form-control"
+                    id="time"
+                    name="time"
+                  />
+                  <i id="time-error" style="color:#ff0000; font-size: 11px;display: none;">Mandatory Input</i>
+                  </td>
+                <td width="200">
+                    <select class="form-select" id="therapy_set" name="therapy_set">
+                        <option value="0">Select</option>
+                        {% for obj in therapy_set_list %}
+                        <option value="{{obj.id}}">{{obj.name}}</option>
+                        {% endfor %}
+                      </select>
+                      <i id="therapy-error" style="color:#ff0000; font-size: 11px;display: none;">Mandatory Input</i>
+                </td>
+                <td width="200">
+                    <button type="submit" class="btn btn-primary" onclick="addTherapy()">Add</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      {% endif %}
+      {% if view_data.patient_treatment|length  > 0 and user_type.id != 9 %}
+      {% if view_data.status != 2 or  view_data.file_status != 3 %}    
+      <div class="card" style="margin-top: 50px">
+        <div class="table-responsive text-nowrap">
+        <input type="hidden" id="pt_id" name="pt_id" value="{{view_data.pt_id}}"/>
+          <table class="table">
+            <thead>
+              <tr>
+                {% if view_data.status != 2 %}
+                <th>Treatment Status</th>
+                {% endif %}
+                <!---->
+                {% if view_data.file_status != 3 %}
+                <th>Referral Status</th>
+                <th id="datecol1" style="display:none;">Referral Date</th>
+                {% endif %}
+                <th></th>
+              </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+              <tr>
+                {% if view_data.status != 2 %}
+                <td width="200">
+                    <select class="form-select" id="trt_status" name="trt_status">
+                        <option value="1">Running</option>
+                        <option value="2">Complete</option>
+                      </select>
+                </td>
+                {% endif %}
+                <!---->
+                {% if view_data.file_status != 3 %}
+                <td width="200">
+                    <select class="form-select" id="file_status" name="file_status" onchange="checkDateDisplay()">
+                        <option value="1">Pending</option>
+                        <option value="2">In Process</option>
+                        <option value="3">Approved</option>
+                      </select>                      
+                </td>
+                <td width="200" id="datecol2"  style="display:none;">
+                    <input class="form-control" type="date" name="file_date" id="file_date"/>
+                    <i id="filedate-error" style="color:#ff0000; font-size: 11px;display: none;">Mandatory Input</i>
+                </td>
+                {% else %}
+                <input type="hidden" id="file_status" value="0"/>
+                <input type="hidden" id="file_date" value="0"/>
+                <i id="filedate-error" style="color:#ff0000; font-size: 11px;display: none;">Mandatory Input</i>
+                {% endif %}
+                <td width="200">
+                    <button type="submit" class="btn btn-primary" onclick="changeStatus()">Submit</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+        {% endif %}
+        {% endif %}
+        {% endif %}
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+var status = "{{view_data.status}}";
+if(document.getElementById("trt_status")){
+document.getElementById("trt_status").value = status;
+}
+var file_status = "{{view_data.file_status}}";
+if(document.getElementById("file_status")){
+document.getElementById("file_status").value = file_status;
+}
+document.getElementById("uhid")
+.addEventListener("keyup", function(event) {
+event.preventDefault();
+if (event.keyCode === 13) {
+    var uhid = document.getElementById("uhid").value;
+    if(uhid.length > 0){
+        window.location.replace("/portal/dashboard/?page=treatment&eid={{employee_id}}&ut={{user_type.id}}&p="+uhid);
+    }
+}
+});
+
+function billing(id){
+    var bill_sl = document.getElementById(id+"_sl").value;
+    var bill_cl = document.getElementById(id+"_cl").value;
+    if(bill_sl == "1"){
+        if(bill_cl.length == 0){
+            document.getElementById(id+"-error").style.display="";
+        }else{
+            document.getElementById(id+"-error").style.display="none";
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function () {
+            var result = this.responseText;
+            window.location.reload();
+            };
+            xhttp.open(
+            "GET",
+            "/portal/billing/?sl=" + bill_sl + "&cl="+bill_cl+"&id="+id,
+            true
+            );    
+            xhttp.send();
+        }
+    }
+}
+
+function checkDateDisplay(){
+    if(document.getElementById("file_status")){
+        var file_status = document.getElementById("file_status").value;
+        if(file_status == "3"){
+            document.getElementById("datecol1").style.display="";
+            document.getElementById("datecol2").style.display="";
+        }else{
+            document.getElementById("datecol1").style.display="none";
+            document.getElementById("datecol2").style.display="none";
+        }
+    }
+}
+
+function changeStatus(){
+    var pt_id = document.getElementById("pt_id").value;
+    var trt_status = "0";
+    if(document.getElementById("trt_status")){
+        trt_status = document.getElementById("trt_status").value;
+    }
+    var error = false;
+    var file_status = "1";    
+    var file_date = "";
+    if(document.getElementById("file_status")){
+        file_status = document.getElementById("file_status").value;
+        file_date = document.getElementById("file_date").value;
+    }  
+    if(file_status == "3" && file_date.length == 0){
+        error = true;
+        document.getElementById("filedate-error").style.display="";
+    }else{
+        document.getElementById("filedate-error").style.display="none";
+    }    
+    if(!error){
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function () {
+      var result = this.responseText;
+      window.location.reload();
+    };
+    xhttp.open(
+      "GET",
+      "/portal/updateptstatus/?pt=" + pt_id + "&st="+trt_status+"&ft="+file_status+"&dt="+file_date+"&em={{employee_id}}",
+      true
+    );    
+    xhttp.send();
+  }
+}
+
+function addTherapyBox(){
+    document.getElementById("L1").style.display = "none";
+    document.getElementById("L2").style.display = "";
+    document.getElementById("B1").style.display = "";
+}
+
+function removeTherapyBox(){
+    document.getElementById("L1").style.display = "";
+    document.getElementById("L2").style.display = "none";
+    document.getElementById("B1").style.display = "none";
+}
+
+function addTherapy(){
+    var date = document.getElementById("date").value;
+    var time = document.getElementById("time").value;
+    var therapy = document.getElementById("therapy_set").value;
+    var error = false;
+    if(date.length == 0){
+        document.getElementById("date-error").style.display="";
+        error = true;
+    }else{
+        document.getElementById("date-error").style.display="none";
+        error = false;
+    }
+    if(time.length == 0){
+        document.getElementById("time-error").style.display="";
+        error = true;
+    }else{
+        document.getElementById("time-error").style.display="none";
+        error = false;
+    }
+    if(therapy == "0"){
+        document.getElementById("therapy-error").style.display="";
+        error = true;
+    }else{
+        document.getElementById("therapy-error").style.display="none";
+        if(!error){
+            error = false;
+        }        
+    } 
+    if(!error){
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function () {
+      var result = this.responseText;
+      window.location.reload();
+    };
+    xhttp.open(
+      "GET",
+      "/portal/addtherapy/?th=" + therapy + "&dt="+date+"&uhid={{view_data.uhid}}&time="+time+"&file_status={{view_data.file_status}}",
+      true
+    );    
+    xhttp.send();
+   }
+}
+</script>

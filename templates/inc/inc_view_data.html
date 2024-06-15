@@ -1,0 +1,230 @@
+<!-- Content wrapper -->
+<div class="content-wrapper">
+  <!-- Content -->
+  <div class="container-xxl flex-grow-1 container-p-y">
+    <!-- -->
+    {% if view_type == 1 %}
+    <h4 class="fw-bold py-3 mb-4">{{data_set_1_title}}</h4>
+    {% elif view_type == 2 %}
+    <h4 class="fw-bold py-3 mb-4">{{data_set_2_title}}</h4>
+    {% elif view_type == 3 %}
+    <h4 class="fw-bold py-3 mb-4">{{data_set_3_title}}</h4>
+    {% elif view_type == 4 %}
+    <h4 class="fw-bold py-3 mb-4">{{data_set_4_title}}</h4>
+    {% elif view_type == 5 %}
+    <h4 class="fw-bold py-3 mb-4">{{data_set_5_title}}</h4>
+    {% elif view_type == 6 %}
+    <h4 class="fw-bold py-3 mb-4">{{data_set_6_title}}</h4>
+    {% elif view_type == 7 %}
+    <h4 class="fw-bold py-3 mb-4">{{data_set_7_title}}</h4>
+    {% endif %}
+    <!---->
+    <div style="padding-bottom: 15px">
+      <a href="/portal/dashboard">&#8592; back</a>
+    </div>
+    <div class="card">
+      <div class="table-responsive text-nowrap">
+        {% if user_type.id == 9 %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th>UHID</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Status</th>
+            <tr/>
+          </thead>
+            <tbody class="table-border-bottom-0">
+              {% for obj in view_data.list %}
+              <tr>
+                <td>
+                  <a href="/portal/dashboard/?page=treatment&eid={{employee_id}}&ut={{user_type.id}}&p={{obj.uhid}}">
+                    <b>{{obj.uhid}}</b>
+                  </a>
+                  {% if obj.old_uhid != '0' %}
+                  <br /><s>{{obj.old_uhid}}</s>
+                  {% endif %}
+                </td>
+                <td>{{obj.date}}</td>
+                <td>{{obj.time}}</td>
+                <td>{{obj.status}}</td>
+              </tr>
+              {% endfor %}  
+           </tbody>             
+        </table>  
+        {% endif %}
+        {% if user_type.id != 9 %}
+        <table class="table">
+          <thead>
+            <tr>
+              {% if user_type.id == 4 %}
+              <th>Employee</th>
+              {% endif %}
+              <th>
+                <!---->
+                {% if user_type.id == 2 or user_type.id == 7 %}
+                <!---->
+                {% if view_type != 1 and view_type != 2 %}
+                <!---->
+                UHID
+                <!---->
+                {% else %}
+                <!---->
+                Mobile
+                <!---->
+                {% endif %}
+                <!---->
+
+                {% elif user_type.id != 8 %}
+                <!---->
+                Mobile
+                <!---->
+                {% endif %}
+                <!---->
+                {% if user_type.id == 8 %}
+                <!---->
+                {% if view_type != 1 and view_type != 2 %}
+                <!---->
+                UHID
+                <!---->
+                {% else %}
+                <!---->
+                Mobile
+                <!---->
+                {% endif %}
+                <!---->
+
+                {% else %}
+                <!---->
+                Mobile
+                <!---->
+                {% endif %}
+              </th>
+              <th>Full Name</th>
+              <th>Clinic</th>
+              <th>Health Card Status</th>
+              {% if user_type.id != 4 %}
+              <!---->
+              {% if view_type == 1 or view_type == 2 %}
+              <th>Request Details</th>
+              {% endif %}
+              <!---->
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody class="table-border-bottom-0">
+            {% for obj in view_data.list %}
+            <tr>
+              {% if user_type.id == 4 %}
+              <td>{{obj.emp_name}} ({{obj.employee}})</td>
+              {% endif %}
+              <td>
+                <strong>
+                  <!---->
+                  {% if user_type.id == 2 or user_type.id == 7 or user_type.id == 8 %}
+                  <!---->
+                  {% if view_type != 1 and view_type != 2 %}
+                  <!---->
+                  <a href="/portal/dashboard/?page=bookdoctor&uhid={{obj.id}}">
+                    {{obj.patent_uhid}}
+                    <!---->
+                    {% if obj.old_uhid != '0' %}
+                    <!---->
+                    <br /><s>{{obj.old_uhid}}</s>
+                    <!---->
+                    {% endif %}
+                  </a>
+                  <!---->
+                  {% else %}
+                  <!---->
+                  {{obj.mobile}}
+                  <!---->
+                  {% endif %}
+                  <!---->
+                  {% else %}
+                  <!---->
+                  {{obj.mobile}}<br />
+                  <!---->
+                  {% if user_type.id == 5 or user_type.id == 6 %}
+                  <!---->
+                  {% if obj.is_clinic_visit == 0 %}
+                  <!---->
+                  <a
+                    href="/portal/dashboard/?page=add-new-request&rid={{obj.id}}"
+                  >
+                    Edit
+                  </a>
+                  <!---->
+                  {% elif obj.is_treatment_start == 0 %}
+                  <!---->
+                  Clinic Visited
+                  <!---->
+                  {% elif obj.is_treatment_start == 1 %}
+                  <!---->
+                  Treatment Started
+                  <!---->
+                  {% endif %}
+                  <!---->
+                  {% endif %}
+                  <!---->
+                  {% if user_type.id == 4 %}
+                  <!---->
+                  {% if obj.is_clinic_visit == 0 %}
+                  <!---->
+                  <a
+                    href="/portal/dashboard/?page=add-new-request&rid={{obj.id}}"
+                  >
+                    Edit
+                  </a>
+                  <!---->
+                  {% elif obj.is_treatment_start == 0 %}
+                  <!---->
+                  Clinic Visited
+                  <!---->
+                  {% elif obj.is_treatment_start == 1 %}
+                  <!---->
+                  Treatment Started
+                  <!---->
+                  {% endif %}
+                  <!---->
+                  {% endif %}
+                  <!---->
+                  {% endif %}
+                </strong>
+              </td>
+              <td>
+                {{obj.first_name}}
+                <!---->
+                {% if obj.last_name != '-' %}
+                <!---->
+                {{obj.last_name}}
+                <!---->
+                {% endif %}
+              </td>
+              <td>
+                {{obj.clinic_name}}<br />
+                {% if obj.appointment_datetime is not None %}
+                Appointment Date :
+                <b>{{obj.appointment_datetime|slice:'0:10'}}</b>
+                {% endif %}
+              </td>
+              <td>{{obj.health_card_type_str}}</td>
+              {% if user_type.id != 4 %}
+              <!---->
+              {% if view_type == 1 or view_type == 2 %}
+              <td>
+                <b>{{obj.emp_type}}</b> <br />
+                {{obj.emp_name}} ({{obj.employee}})
+              </td>
+              {% endif %}
+              <!---->
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

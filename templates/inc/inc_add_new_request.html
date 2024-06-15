@@ -1,0 +1,598 @@
+{% if request.GET.rid is not None %}
+<!---->
+<form
+  action="{% url 'updatereq' %}"
+  method="POST"
+  enctype="multipart/form-data"
+  onsubmit="return validateForm()"
+>
+  {% else %}
+  <form
+    action="{% url 'addnewreq' %}"
+    method="POST"
+    enctype="multipart/form-data"
+    onsubmit="return validateForm()"
+  >
+    {% endif %}
+    <!---->
+    {% csrf_token %}
+    <div class="content-wrapper">
+      <!-- Content -->
+      <div class="container-xxl flex-grow-1 container-p-y">
+        <h4 class="fw-bold py-3 mb-4">
+          {% if request.GET.rid is None %}
+          <!---->
+          Add New Request
+          <input type="hidden" name="rid" id="rid" value="0" />
+          <!---->
+          {% else %}
+          <!---->
+          Update Request
+          <input
+            type="hidden"
+            name="rid"
+            id="rid"
+            value="{{request.GET.rid}}"
+          />
+          <!---->
+          {% endif%}
+        </h4>
+        <div style="padding-bottom: 15px">
+          <a href="/portal/dashboard">&#8592; back</a>
+        </div>
+        <div
+          class="alert alert-danger"
+          role="alert"
+          id="errorBlock"
+          style="display: none"
+        >
+          Please select all mandatory fields.
+        </div>
+        <input type="hidden" name="employee_id" value="{{employee_id}}" />
+        <!-- Basic Layout & Basic with Icons -->
+        <div class="row">
+          <!-- Basic Layout -->
+          <div class="col-xxl">
+            <div class="card mb-4">
+              <div
+                class="card-header d-flex align-items-center justify-content-between"
+              >
+                <h5 class="mb-0">Personal Details</h5>
+                <small class="text-muted float-end">* mandatory fields</small>
+              </div>
+              <div class="card-body">
+                <div class="row mb-3">
+                  <label class="col-sm-3 col-form-label" for="mobile"
+                    >Mobile*</label
+                  >
+                  <div class="col-sm-9">
+                    <div class="input-group input-group-merge">
+                      <span class="input-group-text"
+                        ><i class="bx bx-phone"></i
+                      ></span>
+                      {% if request.GET.rid is None %}
+                      <input
+                        type="text"
+                        id="mobile"
+                        class="form-control phone-mask"
+                        name="mobile"
+                        value="{{view_data.mobile}}"
+                        maxlength="10"
+                        onkeypress="return  numbersonly(event, false)"
+                        onblur="checkDuplicateRequest(this.value)"
+                      />
+                      {% else %}
+                      <input
+                        type="text"
+                        id="mobile"
+                        class="form-control phone-mask"
+                        name="mobile"
+                        value="{{view_data.mobile}}"
+                        style="background-color: #fff"
+                        disabled
+                      />
+                      {% endif %}
+                    </div>
+                    <i
+                      id="duplicateMobileError"
+                      style="display: none; color: #ff0000"
+                      >Enter request mobile is already exist.</i
+                    >
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-3 col-form-label" for="mobile"
+                    >Alternate Mobile</label
+                  >
+                  <div class="col-sm-9">
+                    <div class="input-group input-group-merge">
+                      <span class="input-group-text"
+                        ><i class="bx bx-phone"></i
+                      ></span>
+                      <input
+                        type="text"
+                        id="mobile_2"
+                        class="form-control phone-mask"
+                        name="mobile_2"
+                        value="{{view_data.mobile_2}}"
+                        maxlength="10"
+                        onkeypress="return  numbersonly(event, false)"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-3 col-form-label" for="first_name"
+                    >First Name</label
+                  >
+                  <div class="col-sm-9">
+                    <div class="input-group input-group-merge">
+                      <span class="input-group-text"
+                        ><i class="bx bx-user"></i
+                      ></span>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="first_name"
+                        name="first_name"
+                        value="{{view_data.first_name}}"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-3 col-form-label" for="last_name"
+                    >Last Name</label
+                  >
+                  <div class="col-sm-9">
+                    <div class="input-group input-group-merge">
+                      <div class="input-group input-group-merge">
+                        <span class="input-group-text"
+                          ><i class="bx bx-user"></i
+                        ></span>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="last_name"
+                          name="last_name"
+                          value="{{view_data.last_name}}"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-3 col-form-label" for="gender"
+                    >Gender</label
+                  >
+                  <div class="col-sm-4">
+                    <select class="form-select" id="gender" name="gender">
+                      <option value="0" selected>Select</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div align="right" class="col-sm-2 col-form-label">Age</div>
+                  <div class="col-sm-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="age"
+                      name="age"
+                      value="{{view_data.age}}"
+                    />
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-3 col-form-label" for="care_of_type"
+                    >Parents</label
+                  >
+                  <div class="col-sm-4">
+                    <select
+                      class="form-select"
+                      id="care_of_type"
+                      name="care_of_type"
+                    >
+                      {% for obj in careof %}
+                      <option value="{{obj.id}}">{{obj.name}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="col-sm-5">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="care_of"
+                      name="care_of"
+                      value="{{view_data.care_of}}"
+                    />
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-3 col-form-label" for="address"
+                    >Address</label
+                  >
+                  <div class="col-sm-9">
+                    <textarea id="address" class="form-control" name="address">
+{{view_data.address}}</textarea
+                    >
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-3 col-form-label" for="city">City</label>
+                  <div class="col-sm-9">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="city"
+                      name="city"
+                      value="{{view_data.city}}"
+                    />
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-3 col-form-label" for="country"
+                    >Country</label
+                  >
+                  <div class="col-sm-9">
+                    <select class="form-select" id="country" name="country">
+                      {% for obj in country %}
+                      <option value="{{obj.id}}">{{obj.name}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Basic with Icons -->
+          <div class="col-xxl">
+            <div class="card mb-4">
+              <div
+                class="card-header d-flex align-items-center justify-content-between"
+              >
+                <h5 class="mb-0">Appointment Details</h5>
+              </div>
+              <div class="card-body">
+                <div class="row mb-3">
+                  <label class="col-sm-3 col-form-label" for="state"
+                    >State</label
+                  >
+                  <div class="col-sm-9">
+                    <select class="form-select" id="state" name="state">
+                      <option value="0">Select</option>
+                      {% for obj in state %}
+                      <option value="{{obj.id}}">{{obj.name}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-3 col-form-label" for="clinic"
+                    >Clinic</label
+                  >
+                  <div class="col-sm-9">
+                    <select
+                      class="form-select"
+                      id="clinicContainer"
+                      name="clinic"
+                    >
+                      <option value="0">Select</option>
+                      {% for obj in clinic %}
+                      <option value="{{obj.id}}">{{obj.name}}</option>
+                      {% endfor %}
+                    </select>
+                    <input
+                      type="hidden"
+                      id="symptoms"
+                      name="symptoms"
+                      value="0"
+                    />
+                  </div>
+                </div>
+                <!--
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="symptoms"
+                  >Disease / Symptoms</label
+                >
+                <div class="col-sm-9">
+                  <select class="form-select" id="symptoms" name="symptoms">
+                    <option value="0">Select</option>
+                    {% for obj in disease %}
+                    <option value="{{obj.id}}">{{obj.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            -->
+                <div class="row mb-3">
+                  <label class="col-sm-3 col-form-label" for="hctype"
+                    >Health Card Type*</label
+                  >
+                  <div class="col-sm-9">
+                    <select class="form-select" id="hctype" name="hctype">
+                      <option value="0">Select</option>
+                      {% for obj in healthCardType %}
+                      <option value="{{obj.id}}">{{obj.name}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="row mb-3" id="catofhct">
+                  <label class="col-sm-3 col-form-label">&nbsp;</label>
+                  <div class="col-sm-9">
+                    <select class="form-select" id="hctypeCat" name="hctypeCat">
+                      {% for obj in healthCardTypeCategory %}
+                      <option value="{{obj.id}}">{{obj.name}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="row mb-3" id="hcnum">
+                  <label class="col-sm-3 form-label" for="hcnumber"
+                    >Health Card Number*</label
+                  >
+                  <div class="col-sm-9">
+                    <input
+                      type="text"
+                      id="hcnumber"
+                      class="form-control phone-mask"
+                      name="hcnumber"
+                      value="{{view_data.hcnumber}}"
+                    />
+                  </div>
+                </div>
+                <div class="row mb-3" id="hcarddesc">
+                  <label class="col-sm-3 form-label" for="hcarddesc"
+                    >Health Card Type Name*</label
+                  >
+                  <div class="col-sm-9">
+                    <input
+                      type="text"
+                      id="hltcarddesc"
+                      class="form-control phone-mask"
+                      name="hltcarddesc"
+                      value="{{view_data.hltcarddesc}}"
+                    />
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-3 form-label" for="date"
+                    >Appointment Date</label
+                  >
+                  <div class="col-sm-9">
+                    <input
+                      type="date"
+                      id="date"
+                      class="form-control phone-mask"
+                      name="date"
+                      value="{{view_data.date}}"
+                    />
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-3 form-label" for="remark">Remark</label>
+                  <div class="col-sm-9">
+                    <textarea id="remark" class="form-control" name="remark">
+{{view_data.remark}}</textarea
+                    >
+                  </div>
+                </div>
+                <div align="right" class="row justify-content-end">
+                  <div class="col-sm-10">
+                    <button
+                      type="submit"
+                      id="submitBtn"
+                      class="btn btn-primary"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- / Content -->
+      <div class="content-backdrop fade"></div>
+    </div>
+  </form>
+  <script type="text/javascript">
+    var hctype = document.querySelector("#hctype");
+    var hctype_val = parseInt(hctype.value);
+    showHideHCTCat(hctype_val);
+    hctype.addEventListener("change", function () {
+      hctype_val = parseInt(hctype.value);
+      showHideHCTCat(hctype_val);
+    });
+    function checkDuplicateRequest(mobile) {
+      if (mobile.length == 10) {
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function () {
+          if (this.responseText == "N") {
+            document.getElementById("submitBtn").style.display = "None";
+            document.getElementById("duplicateMobileError").style.display = "";
+          } else {
+            document.getElementById("submitBtn").style.display = "";
+            document.getElementById("duplicateMobileError").style.display =
+              "None";
+          }
+        };
+        xhttp.open(
+          "GET",
+          "/portal/duplicaterequestcheck/?mobile=" + mobile,
+          true
+        );
+        xhttp.send();
+      }
+    }
+    function numbersonly(e, decimal) {
+      var key;
+      var keychar;
+      if (window.event) {
+        key = window.event.keyCode;
+      } else if (e) {
+        key = e.which;
+      } else {
+        return true;
+      }
+      keychar = String.fromCharCode(key);
+      if (
+        key == null ||
+        key == 0 ||
+        key == 8 ||
+        key == 9 ||
+        key == 13 ||
+        key == 27
+      ) {
+        return true;
+      } else if ("0123456789".indexOf(keychar) > -1) {
+        return true;
+      } else if (decimal && keychar == ".") {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    function showHideHCTCat(hctype_val) {
+      if (hctype_val > 1 && hctype_val != 7) {
+        document.querySelector("#catofhct").style.display = "";
+        document.querySelector("#hcnum").style.display = "";
+        document.querySelector("#hcarddesc").style.display = "none";
+      } else {
+        document.querySelector("#catofhct").style.display = "none";
+        document.querySelector("#hcnum").style.display = "none";
+        document.querySelector("#hcarddesc").style.display = "none";
+      }
+      if (hctype_val == 4) {
+        document.querySelector("#hcnum").style.display = "none";
+        document.querySelector("#hcarddesc").style.display = "none";
+      }
+      if (hctype_val == 7) {
+        document.querySelector("#hcarddesc").style.display = "";
+      }
+    }
+
+    var state = document.querySelector("#state");
+    state.addEventListener("change", function () {
+      state_val = parseInt(state.value);
+      clinicFilter(state_val);
+    });
+    function clinicFilter(state_val) {
+      const xhttp = new XMLHttpRequest();
+      xhttp.onload = function () {
+        document.getElementById("clinicContainer").innerHTML =
+          this.responseText;
+      };
+      xhttp.open("GET", "/portal/filterclinic/?state=" + state_val, true);
+      xhttp.send();
+    }
+    function validateForm() {
+      var mobile = document.querySelector("#mobile").value;
+      var mobile_2 = document.querySelector("#mobile_2").value;
+      var first_name = document.querySelector("#first_name").value;
+      var last_name = document.querySelector("#last_name").value;
+      var age = document.querySelector("#age").value;
+      var care_of = document.querySelector("#care_of").value;
+      var address = document.querySelector("#address").value;
+      var city = document.querySelector("#city").value;
+      var hcnumber = document.querySelector("#hcnumber").value;
+      var date = document.querySelector("#date").value;
+      var remark = document.querySelector("#remark").value;
+      var state = document.querySelector("#state").value;
+      var country = document.querySelector("#country").value;
+      var clinicContainer = document.querySelector("#clinicContainer").value;
+      var symptoms = document.querySelector("#symptoms").value;
+      var hctype = document.querySelector("#hctype").value;
+      var hctypeCat = document.querySelector("#hctypeCat").value;
+
+      var error = false;
+      if (
+        mobile.length != 10 ||
+        (mobile_2.length > 0 && mobile_2.length != 10 && mobile_2 != "0")
+      ) {
+        error = true;
+      }
+      if (error) {
+        document.querySelector("#errorBlock").style.display = "";
+        if (mobile.length != 10) {
+          document.querySelector("#errorBlock").innerHTML =
+            "Please enter valid mobile number";
+        } else if (mobile_2.length > 0 && mobile_2.length != 10) {
+          if (mobile.length != 10) {
+            document.querySelector("#errorBlock").innerHTML =
+              "Please enter valid alternate mobile number";
+          }
+        }
+      } else {
+        document.querySelector("#errorBlock").style.display = "none";
+        if (first_name.length == 0) {
+          document.querySelector("#first_name").value = "-";
+        }
+        if (last_name.length == 0) {
+          document.querySelector("#last_name").value = "-";
+        }
+        if (mobile_2.length == 0) {
+          document.querySelector("#mobile_2").value = "0";
+        }
+        if (age.length == 0) {
+          document.querySelector("#age").value = "0";
+        }
+        if (care_of.length == 0) {
+          document.querySelector("#care_of").value = "-";
+        }
+        if (address.length == 0) {
+          document.querySelector("#address").value = "-";
+        }
+        if (city.length == 0) {
+          document.querySelector("#city").value = "-";
+        }
+        if (hcnumber.length == 0) {
+          document.querySelector("#hcnumber").value = "-";
+        }
+        if (date.length == 0) {
+          document.querySelector("#date").value = "1999-01-01";
+        }
+        if (remark.length == 0) {
+          document.querySelector("#remark").value = "-";
+        }
+        if (hctype == "0") {
+          document.querySelector("#hctype").value = "1";
+        }
+        if (hctypeCat.length == 0) {
+          document.querySelector("#hctypeCat").value = "1";
+        }
+      }
+      return !error;
+    }
+  </script>
+  {% if request.GET.rid is not None %}
+  <script type="text/javascript">
+    var visited = "{{view_data.is_clinic_visit}}";
+    if (visited.trim() === "1") {
+      document.querySelector("#submitBtn").style.display = "none";
+    }
+    function setClinicData() {
+      document.querySelector("#clinicContainer").value = "{{view_data.clinic}}";
+      document.querySelector("#waitSection").style.display = "none";
+      var hctype = document.querySelector("#hctype");
+      var hctype_val = parseInt(hctype.value);
+      showHideHCTCat(hctype_val);
+    }
+    document.querySelector("#waitSection").style.display = "";
+    document.querySelector("#care_of_type").value =
+      "{{view_data.care_of_type}}";
+    document.querySelector("#gender").value = "{{view_data.gender}}";
+    document.querySelector("#country").value = "{{view_data.country}}";
+    document.querySelector("#state").value = "{{view_data.state}}";
+    state_val = parseInt("{{view_data.state}}");
+    clinicFilter(state_val);
+    document.querySelector("#hctype").value = "{{view_data.health_card_type}}";
+    document.querySelector("#hctypeCat").value =
+      "{{view_data.health_card_type_cat}}";
+    setTimeout(setClinicData, 3000);
+  </script>
+  {% endif %}
+</form>

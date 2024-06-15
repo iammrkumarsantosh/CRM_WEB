@@ -1,0 +1,704 @@
+<form
+  action="{% url 'addnewpatient' %}"
+  method="POST"
+  enctype="multipart/form-data"
+  onsubmit="return validateForm()"
+>
+  {% csrf_token %}
+  <div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+      <h4 class="fw-bold py-3 mb-4">Add New Patient</h4>
+      <div
+        class="alert alert-danger"
+        role="alert"
+        id="errorBlock"
+        style="display: none"
+      >
+        Please select all mandatory fields.
+      </div>
+      <input type="hidden" name="employee_id" value="{{employee_id}}" />
+      <input type="hidden" name="request_id" id="request_id" value="0" />
+      <!-- Basic Layout & Basic with Icons -->
+      <div class="row">
+        <!-- Basic Layout -->
+        <div class="col-xxl">
+          <div class="card mb-4">
+            <div
+              class="card-header d-flex align-items-center justify-content-between"
+            >
+              <h5 class="mb-0">Personal Details</h5>
+              <small class="text-muted float-end">* mandatory fields</small>
+            </div>
+            <div class="card-body">
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="mobile"
+                  >Mobile*</label
+                >
+                <div class="col-sm-9">
+                  <div class="input-group input-group-merge">
+                    <span class="input-group-text"
+                      ><i class="bx bx-phone"></i
+                    ></span>
+                    <input
+                      type="text"
+                      id="mobile"
+                      class="form-control phone-mask"
+                      onkeydown="return event.key != 'Enter';"
+                      onblur="searchPatientAvailability(this.value)"
+                      name="mobile"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="alt_mobile"
+                  >Alternate Mobile</label
+                >
+                <div class="col-sm-9">
+                  <div class="input-group input-group-merge">
+                    <span class="input-group-text"
+                      ><i class="bx bx-phone"></i
+                    ></span>
+                    <input
+                      type="text"
+                      id="alt_mobile"
+                      class="form-control phone-mask"
+                      name="alt_mobile"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="email">Email</label>
+                <div class="col-sm-9">
+                  <div class="input-group input-group-merge">
+                    <input
+                      type="text"
+                      id="email"
+                      class="form-control phone-mask"
+                      name="email"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="occupation"
+                  >Occupation</label
+                >
+                <div class="col-sm-9">
+                  <div class="input-group input-group-merge">
+                    <input
+                      type="text"
+                      id="occupation"
+                      class="form-control phone-mask"
+                      name="occupation"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="blood_group"
+                  >Blood Group</label
+                >
+                <div class="col-sm-9">
+                  <div class="input-group input-group-merge">
+                    <input
+                      type="text"
+                      id="blood_group"
+                      class="form-control phone-mask"
+                      name="blood_group"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="first_name"
+                  >First Name*</label
+                >
+                <div class="col-sm-9">
+                  <div class="input-group input-group-merge">
+                    <span class="input-group-text"
+                      ><i class="bx bx-user"></i
+                    ></span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="first_name"
+                      onkeydown="return event.key != 'Enter';"
+                      name="first_name"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="last_name"
+                  >Last Name*</label
+                >
+                <div class="col-sm-9">
+                  <div class="input-group input-group-merge">
+                    <div class="input-group input-group-merge">
+                      <span class="input-group-text"
+                        ><i class="bx bx-user"></i
+                      ></span>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="last_name"
+                        onkeydown="return event.key != 'Enter';"
+                        name="last_name"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="gender"
+                  >Gender*</label
+                >
+                <div class="col-sm-4">
+                  <select class="form-select" id="gender" name="gender">
+                    <option value="0" selected>Select</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div align="right" class="col-sm-2 col-form-label">Age*</div>
+                <div class="col-sm-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="age"
+                    onkeydown="return event.key != 'Enter';"
+                    name="age"
+                  />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="marital_status"
+                  >Marital Status*</label
+                >
+                <div class="col-sm-4">
+                  <select
+                    class="form-select"
+                    id="marital_status"
+                    name="marital_status"
+                  >
+                    <option value="Married">Married</option>
+                    <option value="Unmarried">Unmarried</option>
+                  </select>
+                </div>
+                <div align="right" class="col-sm-2 col-form-label">
+                  Religion*
+                </div>
+                <div class="col-sm-3">
+                  <select class="form-select" id="religion" name="religion">
+                    <option value="Hindus">Hindus</option>
+                    <option value="Muslims">Muslims</option>
+                    <option value="Christians">Christians</option>
+                    <option value="Sikhs">Sikhs</option>
+                    <option value="Buddhists">Buddhists</option>
+                    <option value="Jains">Jains</option>
+                    <option value="Other religion">Other religion</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="care_of_type"
+                  >Parents*</label
+                >
+                <div class="col-sm-4">
+                  <select
+                    class="form-select"
+                    id="care_of_type"
+                    name="care_of_type"
+                  >
+                    {% for obj in careof %}
+                    <option value="{{obj.id}}">{{obj.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-sm-5">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="care_of"
+                    onkeydown="return event.key != 'Enter';"
+                    name="care_of"
+                  />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="address"
+                  >Address*</label
+                >
+                <div class="col-sm-9">
+                  <textarea
+                    id="address"
+                    class="form-control"
+                    onkeydown="return event.key != 'Enter';"
+                    name="address"
+                  ></textarea>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="city">City</label>
+                <div class="col-sm-4" style="padding-top: 5px">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="city"
+                    onkeydown="return event.key != 'Enter';"
+                    name="city"
+                  />
+                </div>
+                <label class="col-sm-2 col-form-label" for="pincode"
+                  >Picode</label
+                >
+                <div class="col-sm-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    onkeydown="return event.key != 'Enter';"
+                    id="pincode"
+                    name="pincode"
+                  />
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="state"
+                  >State*</label
+                >
+                <div class="col-sm-4" style="padding-top: 5px">
+                  <select class="form-select" id="state" name="state">
+                    {% for obj in state %}
+                    <option value="{{obj.id}}">{{obj.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <label class="col-sm-2 col-form-label" for="country"
+                  >Country*</label
+                >
+                <div class="col-sm-3">
+                  <select class="form-select" id="country" name="country">
+                    {% for obj in country %}
+                    <option value="{{obj.id}}">{{obj.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Basic with Icons -->
+        <div class="col-xxl">
+          <div class="card mb-4">
+            <div
+              class="card-header d-flex align-items-center justify-content-between"
+            ></div>
+            <div class="card-body">
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="clinic"
+                  >Clinic*</label
+                >
+                <div class="col-sm-9" style="padding-top: 5px">
+                  {{full_name}}
+                  <input type="hidden" name="clinic" value="{{employee_id}}" />
+                  <input type="hidden" name="patent_source" value="SELF" />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="symptoms"
+                  >Disease / Symptoms*</label
+                >
+                <div class="col-sm-9">
+                  <select class="form-select" id="symptoms" name="symptoms">
+                    <option value="0">Select</option>
+                    {% for obj in disease %}
+                    <option value="{{obj.id}}">{{obj.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="hctype"
+                  >Health Card Type*</label
+                >
+                <div class="col-sm-9">
+                  <select class="form-select" id="hctype" name="hctype">
+                    <option value="0">Select</option>
+                    {% for obj in healthCardType %}
+                    <option value="{{obj.id}}">{{obj.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3" id="catofhct">
+                <label class="col-sm-3 col-form-label">&nbsp;</label>
+                <div class="col-sm-9">
+                  <select class="form-select" id="hctypeCat" name="hctypeCat">
+                    {% for obj in healthCardTypeCategory %}
+                    <option value="{{obj.id}}">{{obj.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3" id="hcnum">
+                <label class="col-sm-3 form-label" for="hcnumber"
+                  >Health Card Number*</label
+                >
+                <div class="col-sm-9">
+                  <input
+                    type="text"
+                    id="hcnumber"
+                    onkeydown="return event.key != 'Enter';"
+                    class="form-control phone-mask"
+                    name="hcnumber"
+                  />
+                </div>
+              </div>
+              <div class="row mb-3" id="ref_1">
+                <label class="col-sm-3 form-label" for="referral_number"
+                  >Referral Number</label
+                >
+                <div class="col-sm-9">
+                  <input
+                    type="text"
+                    id="referral_number"
+                    onkeydown="return event.key != 'Enter';"
+                    class="form-control phone-mask"
+                    name="referral_number"
+                  />
+                </div>
+              </div>
+              <div class="row mb-3" id="ref_2">
+                <label class="col-sm-3 form-label" for="referral_date"
+                  >Referral Date</label
+                >
+                <div class="col-sm-9">
+                  <input
+                    type="date"
+                    id="referral_date"
+                    onkeydown="return event.key != 'Enter';"
+                    class="form-control phone-mask"
+                    name="referral_date"
+                  />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 form-label" for="bp">BP*</label>
+                <div class="col-sm-9">
+                  <input
+                    type="text"
+                    id="bp"
+                    class="form-control phone-mask"
+                    name="bp"
+                    placeholder="0"
+                  />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 form-label" for="sugar">Sugar*</label>
+                <div class="col-sm-9">
+                  <input
+                    type="text"
+                    id="sugar"
+                    class="form-control phone-mask"
+                    name="sugar"
+                    placeholder="0"
+                  />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 form-label" for="weight">Weight*</label>
+                <div class="col-sm-9">
+                  <input
+                    type="text"
+                    id="weight"
+                    class="form-control phone-mask"
+                    name="weight"
+                    placeholder="Weight in KG"
+                  />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 form-label" for="doctor_id"
+                  >Doctor*</label
+                >
+                <div class="col-sm-9">
+                  <input
+                    type="hidden"
+                    id="total_service"
+                    class="form-control phone-mask"
+                    onkeydown="return event.key != 'Enter';"
+                    name="total_service"
+                    placeholder="0"
+                  />
+                  <select class="form-select" id="doctor_id" name="doctor_id">
+                    <option value="0">Select</option>
+                    {% for obj in doctor_list %}
+                    <option value="{{obj.id}}">
+                      Dr. {{obj.first_name}}
+                      <!---->
+                      {% if obj.last_name != '-' %}
+                      <!---->
+                      {{obj.last_name}}
+                      <!---->
+                      {% endif %}
+                    </option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 form-label" for="fee">Fee*</label>
+                <div class="col-sm-9">
+                  <input
+                    type="text"
+                    id="fee"
+                    class="form-control phone-mask"
+                    onkeydown="return event.key != 'Enter';"
+                    name="fee"
+                    placeholder="0"
+                  />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="payment_type"
+                  >Payment Details*</label
+                >
+                <div class="col-sm-4" style="padding-top: 5px">
+                  <select
+                    class="form-select"
+                    id="payment_type"
+                    name="payment_type"
+                  >
+                    <option value="0">Select</option>
+                    {% for obj in payment_type %}
+                    <option value="{{obj.name}}">{{obj.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-sm-5">
+                  <input
+                    type="text"
+                    id="transaction_num"
+                    class="form-control phone-mask"
+                    onkeydown="return event.key != 'Enter';"
+                    name="transaction_num"
+                    placeholder="Transaction Number"
+                  />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 form-label" for="remark">Remark</label>
+                <div class="col-sm-9">
+                  <textarea
+                    id="remark"
+                    onkeydown="return event.key != 'Enter';"
+                    class="form-control"
+                    name="remark"
+                  ></textarea>
+                </div>
+              </div>
+              <div align="right" class="row justify-content-end">
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- / Content -->
+    <div class="content-backdrop fade"></div>
+  </div>
+</form>
+<script type="text/javascript">
+  var hctype = document.querySelector("#hctype");
+  var hctype_val = parseInt(hctype.value);
+  showHideHCTCat(hctype_val);
+  hctype.addEventListener("change", function () {
+    hctype_val = parseInt(hctype.value);
+    showHideHCTCat(hctype_val);
+  });
+  function showHideHCTCat(hctype_val) {
+    if (hctype_val > 1) {
+      document.querySelector("#catofhct").style.display = "";
+      document.querySelector("#hcnum").style.display = "";
+      document.querySelector("#ref_1").style.display = "";
+      document.querySelector("#ref_2").style.display = "";
+    } else {
+      document.querySelector("#catofhct").style.display = "none";
+      document.querySelector("#hcnum").style.display = "none";
+      document.querySelector("#ref_1").style.display = "none";
+      document.querySelector("#ref_2").style.display = "none";
+    }
+  }
+  function putResult(result) {
+    var ar = result.split("##");
+    if (parseInt(ar[0]) == 1) {
+      window.location.href = ar[1];
+    } else if (parseInt(ar[0]) == 2) {
+      document.querySelector("#first_name").value = ar[1];
+      document.querySelector("#last_name").value = ar[2];
+      document.querySelector("#age").value = ar[6];
+      document.querySelector("#care_of").value = ar[3];
+      document.querySelector("#address").value = ar[7];
+      document.querySelector("#city").value = ar[8];
+      document.querySelector("#hcnumber").value = ar[15];
+      document.querySelector("#remark").value = ar[12];
+      document.querySelector("#hctype").value = ar[13];
+      document.querySelector("#gender").value = ar[5];
+      document.querySelector("#care_of_type").value = ar[4];
+      document.querySelector("#state").value = ar[9];
+      document.querySelector("#country").value = ar[10];
+      document.querySelector("#request_id").value = ar[16];
+      document.querySelector("#mobile").value = ar[17];
+      if (parseInt(ar[13]) > 1) {
+        document.querySelector("#catofhct").style.display = "";
+        document.querySelector("#hcnum").style.display = "";
+        document.querySelector("#hctypeCat").value = ar[14];
+        document.querySelector("#hcnumber").value = ar[15];
+      }
+    }
+  }
+  function searchPatientAvailability(mobile) {
+    mobile = mobile.trim();
+    if (mobile.length == 10) {
+      const xhttp = new XMLHttpRequest();
+      xhttp.onload = function () {
+        var result = this.responseText;
+        if (result.length > 0) {
+          putResult(result);
+        }
+      };
+      xhttp.open(
+        "GET",
+        "/portal/searchPatient/?key=" + mobile + "&cl={{employee_id}}&urid=0",
+        true
+      );
+      xhttp.send();
+    }
+  }
+
+  var doctorSelect = document.querySelector("#doctor_id");
+  doctorSelect.addEventListener("change", function () {
+    doctorId = parseInt(doctorSelect.value);
+    getDoctorFee(doctorId);
+  });
+
+  function getDoctorFee(doctorId) {
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function () {
+      var result = this.responseText;
+      if (result.length > 0) {
+        document.querySelector("#fee").value = result;
+      }
+    };
+    xhttp.open(
+      "GET",
+      "/portal/getDoctorFee/?key=" + doctorId + "&cl={{employee_id}}",
+      true
+    );
+    xhttp.send();
+  }
+
+  function validateForm() {
+    var mobile = document.querySelector("#mobile").value;
+    var first_name = document.querySelector("#first_name").value;
+    var last_name = document.querySelector("#last_name").value;
+    var age = document.querySelector("#age").value;
+    var care_of = document.querySelector("#care_of").value;
+    var address = document.querySelector("#address").value;
+    var city = document.querySelector("#city").value;
+    var hcnumber = document.querySelector("#hcnumber").value;
+    var referral_date = document.querySelector("#referral_date").value;
+    var remark = document.querySelector("#remark").value;
+    var symptoms = document.querySelector("#symptoms").value;
+    var hctype = document.querySelector("#hctype").value;
+    var pincode = document.querySelector("#pincode").value;
+    var total_service = document.querySelector("#total_service").value;
+    var referral_number = document.querySelector("#referral_number").value;
+    var fee = document.querySelector("#fee").value;
+    var payment_type = document.querySelector("#payment_type").value;
+    var transaction_num = document.querySelector("#transaction_num").value;
+    var doctor_id = document.querySelector("#doctor_id").value;
+    var error = false;
+    if (mobile.length == 0 || doctor_id == "0") {
+      error = true;
+    }
+    if (error) {
+      document.querySelector("#errorBlock").style.display = "";
+    } else {
+      document.querySelector("#errorBlock").style.display = "none";
+      if (fee.length == 0) {
+        document.querySelector("#fee").value = "0";
+      }
+      if (payment_type == "0") {
+        document.querySelector("#payment_type").value = "Cash";
+      }
+      if (transaction_num.length == 0) {
+        document.querySelector("#transaction_num").value = "0";
+      }
+      if (first_name.length == 0) {
+        document.querySelector("#first_name").value = "-";
+      }
+      if (last_name.length == 0) {
+        document.querySelector("#last_name").value = "-";
+      }
+      if (age.length == 0) {
+        document.querySelector("#age").value = "0";
+      }
+      if (care_of.length == 0) {
+        document.querySelector("#care_of").value = "-";
+      }
+      if (address.length == 0) {
+        document.querySelector("#address").value = "-";
+      }
+      if (city.length == 0) {
+        document.querySelector("#city").value = "-";
+      }
+      if (hcnumber.length == 0) {
+        document.querySelector("#hcnumber").value = "0";
+      }
+      if (referral_date.length == 0) {
+        document.querySelector("#referral_date").value = "1999-01-01";
+      }
+      if (remark.length == 0) {
+        document.querySelector("#remark").value = "-";
+      }
+      if (pincode.length == 0) {
+        document.querySelector("#pincode").value = "0";
+      }
+      if (total_service.length == 0) {
+        document.querySelector("#total_service").value = "0";
+      }
+      if (referral_number.length == 0) {
+        document.querySelector("#referral_number").value = "0";
+      }
+    }
+    return !error;
+  }
+
+  var urid = "{{request.GET.urid}}";
+  if (urid.length > 0) {
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function () {
+      var result = this.responseText;
+      if (result.length > 0) {
+        putResult(result);
+      }
+    };
+    xhttp.open(
+      "GET",
+      "/portal/searchPatient/?key=" + 0 + "&cl={{employee_id}}&urid=" + urid,
+      true
+    );
+    xhttp.send();
+  }
+</script>

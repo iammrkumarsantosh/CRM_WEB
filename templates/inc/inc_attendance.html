@@ -1,0 +1,153 @@
+<form
+  action="/portal/dashboard/?page=attendance&emp={{employee_id}}"
+  method="POST"
+  enctype="multipart/form-data"
+  onsubmit="return validateForm()"
+>
+  {% csrf_token %}
+  <div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+      <h4 class="fw-bold py-3 mb-4">Attendance</h4>
+      <div
+        class="alert alert-danger"
+        role="alert"
+        id="errorBlock"
+        style="display: none"
+      >
+        Please select all mandatory fields.
+      </div>
+      <input type="hidden" name="employee_id" value="{{employee_id}}" />
+      <!-- Basic Layout & Basic with Icons -->
+      <div class="row">
+        <!-- Basic Layout -->
+        <div class="col-xxl">
+          <div class="card mb-4">
+            <div
+              class="card-header d-flex align-items-center justify-content-between"
+            >
+              <h5 class="mb-0">Select Date Range</h5>
+            </div>
+            <div class="card-body">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Start Date*</label>
+                <div class="col-sm-2">
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="start_date"
+                    name="start_date"
+                    value="{{view_data.start_date}}"
+                  />
+                </div>
+                <div align="right" class="col-sm-2 col-form-label">
+                  End Date*
+                </div>
+                <div class="col-sm-2">
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="end_date"
+                    name="end_date"
+                    value="{{view_data.end_date}}"
+                  />
+                </div>
+                <div align="right" class="col-sm-2 col-form-label">
+                  <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xxl">
+          <div class="card">
+            <div class="table-responsive text-nowrap">
+              {% if view_data.list is not None %}
+              <button
+                type="button"
+                class="btn btn-primary"
+                onclick="download_csv_file()"
+              >
+                Download CSV
+              </button>
+              {% endif %}
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Employee</th>
+                    <th>Shift Start</th>
+                    <th>Shift End</th>
+                  </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                  {% for obj in view_data.list %}
+                  <tr>
+                    <td valign="top">{{obj.date}}</td>
+                    <td valign="top">{{obj.employee}}</td>
+                    <td valign="top">{{obj.start_time}}</td>
+                    <td valign="top">{{obj.end_time}}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- / Content -->
+    <div class="content-backdrop fade"></div>
+  </div>
+  <script type="text/javascript">
+    var csvFileData = [["Date", "Employee", "start_time", "end_time"]];
+  </script>
+  {% for obj in view_data.list %}
+  <script type="text/javascript">
+    csvFileData.push([
+      "{{obj.date}}",
+      "{{obj.employee}}",
+      "{{obj.start_time}}",
+      "{{obj.end_time}}",
+    ]);
+  </script>
+  {% endfor %}
+</form>
+<script type="text/javascript">
+  function validateForm() {
+    var start_date = document.querySelector("#start_date").value;
+    var end_date = document.querySelector("#end_date").value;
+    var error = false;
+    if (start_date.length == 0 || end_date.length == 0) {
+      error = true;
+    }
+    if (error) {
+      document.querySelector("#errorBlock").style.display = "";
+    } else {
+      document.querySelector("#errorBlock").style.display = "none";
+    }
+    return !error;
+  }
+
+  //create a user-defined function to download CSV file
+  function download_csv_file() {
+    //define the heading for each row of the data
+    var csv = ""; // "Name,Profession\n";
+
+    //merge the data with CSV
+    csvFileData.forEach(function (row) {
+      csv += row.join(",");
+      csv += "\n";
+    });
+
+    var hiddenElement = document.createElement("a");
+    hiddenElement.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
+    hiddenElement.target = "_blank";
+
+    //provide the name for the CSV file to be downloaded
+    hiddenElement.download = "Export_Attendance_Data.csv";
+    hiddenElement.click();
+  }
+</script>

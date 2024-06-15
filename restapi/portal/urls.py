@@ -1,0 +1,30 @@
+from django.urls import path
+from restapi.portal import views
+
+urlpatterns = [
+    path('login/', views.PortalLoginPage, name='login'),
+    path('logout/', views.Logout, name='logout'),
+    path('loginaction/', views.PortalLoginAction, name='loginaction'),
+    path('dashboard/', views.PortalDashboardAction, name='dashboard'),
+    path('filterclinic/', views.Filterclinic, name='filterclinic'),
+    path('searchkey/', views.SearchKey, name='searchkey'),
+    path('searchPatient/', views.SearchPatient, name='searchPatient'),
+    path('addnewreq/', views.AddNewReqAction, name='addnewreq'),
+    path('updateprofile/', views.UpdateProfileAction, name='updateprofile'),
+    path('addnewpatient/', views.AddNewPatientAction, name='addnewpatient'),
+    path('adddoctoraction/', views.Adddoctoraction, name='adddoctoraction'),
+    path('booked/', views.Booked, name='booked'),
+    path('addnewemp/', views.AddNewEmpAction, name='addnewemp'),
+    path('getDoctorFee/', views.GetDoctorFee, name='getDoctorFee'),
+    path('updateTreatmentStatus/', views.UpdateTreatmentStatus, name='updateTreatmentStatus'),
+    path('updateReferralStatus/', views.UpdateReferralStatus, name='updateReferralStatus'),
+    path('fileUpload/', views.fileUpload, name='fileUpload'),
+    path('updatereq/', views.UpdateReqAction, name='updatereq'),
+    path('addtherapy/', views.AddTherapyAction, name='addtherapy'),
+    path('updateptstatus/', views.UpdatePTStatusAction, name='updateptstatus'),
+    path('billing/', views.BillingAction, name='billing'),
+    path('duplicaterequestcheck/', views.DuplicateRequestCheck, name='duplicaterequestcheck'),
+    path('editpatient/', views.EditpatientAction, name='editpatient'),
+    path('exportpatientdata/', views.ExportPatientDataAction, name='exportpatientdata'),
+    path('exportempdata/', views.ExportEmpDataAction, name='exportempdata'),
+]

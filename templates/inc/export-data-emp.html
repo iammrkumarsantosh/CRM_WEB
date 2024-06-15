@@ -1,0 +1,144 @@
+<form
+  action="/portal/dashboard/?page=export-data-emp"
+  method="POST"
+  enctype="multipart/form-data"
+  onsubmit="return validateForm()"
+>
+  {% csrf_token %}
+  <div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+      <h4 class="fw-bold py-3 mb-4">Export Data</h4>
+      <div
+        class="alert alert-danger"
+        role="alert"
+        id="errorBlock"
+        style="display: none"
+      >
+        Please select all mandatory fields.
+      </div>
+      <input type="hidden" name="employee_id" value="{{employee_id}}" />
+      <!-- Basic Layout & Basic with Icons -->
+      <div class="row">
+        <!-- Basic Layout -->
+        <div class="col-xxl">
+          <div class="card mb-4">
+            <div
+              class="card-header d-flex align-items-center justify-content-between"
+            >
+              <h5 class="mb-0">Select Date Range</h5>
+            </div>
+            <div class="card-body">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Start Date*</label>
+                <div class="col-sm-2">
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="start_date"
+                    name="start_date"
+                    value="{{view_data.start_date}}"
+                  />
+                </div>
+                <div align="right" class="col-sm-2 col-form-label">
+                  End Date*
+                </div>
+                <div class="col-sm-2">
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="end_date"
+                    name="end_date"
+                    value="{{view_data.end_date}}"
+                  />
+                </div>
+                <div align="right" class="col-sm-2 col-form-label">
+                  <button type="submit" class="btn btn-primary">View Data</button>
+                </div>
+                <div align="left" class="col-sm-2 col-form-label">
+                  <button type="button" onclick="exportData()" class="btn btn-primary">Export Data</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xxl">
+          <div class="card">
+            <div class="table-responsive text-nowrap">              
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Employee</th>
+                    <th>Request Details</th>
+                  </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                  {% for obj in view_data.list %}
+                  <tr>
+                    <td valign="top">{{obj.date}}</td>
+                    <td valign="top">{{obj.employee}}</td>
+                    <td valign="top">
+                      {{obj.mobile}}<br />
+                      Clinic : {{obj.clinic_name}}<br />
+                      <!---->
+                      Name : {{obj.first_name}}
+                      <!---->
+                      {% if obj.last_name != '-' %}
+                      <!---->
+                      {{obj.last_name}}
+                      <!---->
+                      {% endif %}
+                      <!---->
+                      , {{obj.gender}} <br />
+                      <!---->
+                      Is_Clinic_Visit : {{obj.is_clinic_visit}}<br />
+                      Is_Treatment_Start : {{obj.is_treatment_start}}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- / Content -->
+    <div class="content-backdrop fade"></div>
+  </div>
+</form>
+<script type="text/javascript">
+  function exportData(){
+    var start_date = document.querySelector("#start_date").value;
+    var end_date = document.querySelector("#end_date").value;
+    var error = false;
+    if (start_date.length == 0 || end_date.length == 0) {
+      error = true;
+    }
+    if (error) {
+      document.querySelector("#errorBlock").style.display = "";
+    } else {
+      document.querySelector("#errorBlock").style.display = "none";
+      var url = "/portal/exportempdata/?start="+start_date+"&end="+end_date+"&em={{employee_id}}";
+      window.open(url, "_blank")
+    }    
+  }
+  function validateForm() {
+    var start_date = document.querySelector("#start_date").value;
+    var end_date = document.querySelector("#end_date").value;
+    var error = false;
+    if (start_date.length == 0 || end_date.length == 0) {
+      error = true;
+    }
+    if (error) {
+      document.querySelector("#errorBlock").style.display = "";
+    } else {
+      document.querySelector("#errorBlock").style.display = "none";
+    }
+    return !error;
+  }
+
+</script>

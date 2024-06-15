@@ -1,0 +1,65 @@
+<!-- Content wrapper -->
+<div class="content-wrapper">
+  <!-- Content -->
+  <div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">Doctor</h4>
+    <!---->
+    <div class="card">
+      <div class="table-responsive text-nowrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Full Name</th>
+              {% if user_type.id == 8 %}
+              <th>Clinic</th>
+              {% endif %}
+              <th>Fee</th>
+              <th>Status</th>
+              {% if user_type.id != 8 %}
+              <th>Action</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody class="table-border-bottom-0">
+            {% for obj in view_data.list %}
+            <tr>
+              <td>
+                Dr. {{obj.doctor.first_name}}
+                <!---->
+                {% if obj.doctor.last_name != '-' %}
+                <!---->
+                {{obj.doctor.last_name}}
+                <!---->
+                {% endif %}
+              </td>
+              {% if user_type.id == 8 %}
+              <td>{{obj.clinic.name}}</td>
+              {% endif %}
+              <td>&#8377; {{obj.fee}}</td>
+              <td>
+                {% if obj.is_valid == 1 %}
+                <!---->
+                Active
+                <!---->
+                {% else %}
+                <!---->
+                Inactive
+                <!---->
+                {% endif %}
+              </td>
+              {% if user_type.id != 8 %}
+              <td>
+                <a
+                  href="/portal/dashboard/?page=doctor&id={{obj.doctor.id}}&eid={{employee_id}}"
+                  >Edit</a
+                >
+              </td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

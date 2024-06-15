@@ -1,0 +1,148 @@
+<form
+  action="{% url 'adddoctoraction' %}"
+  method="POST"
+  enctype="multipart/form-data"
+  onsubmit="return validateForm()"
+>
+  {% csrf_token %}
+  <div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+      {% if request.GET.id is not None %}
+      <h4 class="fw-bold py-3 mb-4">Update Doctor</h4>
+      <input type="hidden" name="doctor_id" value="{{request.GET.id}}" />
+      <input type="hidden" name="clinic_id" value="{{view_data.clinic_id}}" />
+      <input
+        type="hidden"
+        name="clinic_doctor_id"
+        value="{{view_data.clinic_doctor_id}}"
+      />
+      {% else %}
+      <h4 class="fw-bold py-3 mb-4">Add New Doctor</h4>
+      <input type="hidden" name="doctor_id" value="0" />
+      <input type="hidden" name="clinic_id" value="0" />
+      <input type="hidden" name="clinic_doctor_id" value="0" />
+      {% endif %}
+      <div
+        class="alert alert-danger"
+        role="alert"
+        id="errorBlock"
+        style="display: none"
+      >
+        Please select all mandatory fields.
+      </div>
+      <input type="hidden" name="employee_id" value="{{employee_id}}" />
+      <!-- Basic Layout & Basic with Icons -->
+      <div class="row">
+        <!-- Basic Layout -->
+        <div class="col-xxl">
+          <div class="card mb-4">
+            <div class="card-body">
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="first_name"
+                  >First Name*</label
+                >
+                <div class="col-sm-9">
+                  <div class="input-group input-group-merge">
+                    <span class="input-group-text"
+                      ><i class="bx bx-user"></i
+                    ></span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="first_name"
+                      onkeydown="return event.key != 'Enter';"
+                      name="first_name"
+                      value="{{view_data.first_name}}"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="last_name"
+                  >Last Name*</label
+                >
+                <div class="col-sm-9">
+                  <div class="input-group input-group-merge">
+                    <div class="input-group input-group-merge">
+                      <span class="input-group-text"
+                        ><i class="bx bx-user"></i
+                      ></span>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="last_name"
+                        onkeydown="return event.key != 'Enter';"
+                        name="last_name"
+                        value="{{view_data.last_name}}"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" for="status"
+                  >Status*</label
+                >
+                <div class="col-sm-4">
+                  <select class="form-select" id="status" name="status">
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                  </select>
+                </div>
+                <div align="right" class="col-sm-2 col-form-label">Fee*</div>
+                <div class="col-sm-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="fee"
+                    onkeydown="return event.key != 'Enter';"
+                    name="fee"
+                    value="{{view_data.fee}}"
+                  />
+                </div>
+              </div>
+              <div align="right" class="row justify-content-end">
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Basic with Icons -->
+        <div class="col-xxl">
+          <div class="card mb-4"></div>
+        </div>
+      </div>
+    </div>
+    <!-- / Content -->
+    <div class="content-backdrop fade"></div>
+  </div>
+</form>
+<script type="text/javascript">
+  var status = "{{view_data.is_valid}}";
+  if (status == "0") {
+    document.querySelector("#status").value = 0;
+  } else if (status == "1") {
+    document.querySelector("#status").value = 1;
+  }
+  function validateForm() {
+    var fee = document.querySelector("#fee").value;
+    var first_name = document.querySelector("#first_name").value;
+    var last_name = document.querySelector("#last_name").value;
+    var error = false;
+    if (first_name.length == 0 || fee == "0") {
+      error = true;
+    }
+    if (error) {
+      document.querySelector("#errorBlock").style.display = "";
+    } else {
+      document.querySelector("#errorBlock").style.display = "none";
+      if (last_name.length == 0) {
+        document.querySelector("#last_name").value = "-";
+      }
+    }
+    return !error;
+  }
+</script>

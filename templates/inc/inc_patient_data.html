@@ -1,0 +1,447 @@
+<form
+  action="/portal/dashboard/?page=patientdata"
+  method="POST"
+  enctype="multipart/form-data"
+  onsubmit="return validateForm()"
+>
+  {% csrf_token %}
+  <div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+      <h4 class="fw-bold py-3 mb-4">View Patient</h4>
+      <div
+        class="alert alert-danger"
+        role="alert"
+        id="errorBlock"
+        style="display: none"
+      >
+        Please select all mandatory fields.
+      </div>
+      <input type="hidden" name="employee_id" value="{{employee_id}}" />
+      <input type="hidden" name="user_type_id" value="{{user_type.id}}" />
+      <!-- Basic Layout & Basic with Icons -->
+      <div class="row">
+        <!-- Basic Layout -->
+        <div class="col-xxl">
+          <div class="card mb-4">
+            <div
+              class="card-header d-flex align-items-center justify-content-between"
+            >
+              <h5 class="mb-0">Select Date Range</h5>
+            </div>
+            <div class="card-body">
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Start Date*</label>
+                <div class="col-sm-2">
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="start_date"
+                    name="start_date"
+                    value="{{view_data.start_date}}"
+                  />
+                </div>
+                <div align="right" class="col-sm-2 col-form-label">
+                  End Date*
+                </div>
+                <div class="col-sm-2">
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="end_date"
+                    name="end_date"
+                    value="{{view_data.end_date}}"
+                  />
+                </div>
+                <div align="right" class="col-sm-2 col-form-label">
+                  <button type="submit" class="btn btn-primary">View Data</button>
+                </div>
+                <div align="left" class="col-sm-2 col-form-label">
+                  <button type="button" onclick="exportData()" class="btn btn-primary">Export Data</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>    
+      <div class="row">
+        <div class="col-xxl">
+          <div class="card">
+            <div class="table-responsive text-nowrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>UHID / Date</th>
+                    <th>Patient Information</th>
+                    <th>Medical Information</th>
+                  </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                  {% for obj in view_data.list %}
+                  <tr>
+                    <td valign="top">
+                      <a
+                        href="/portal/dashboard/?page=bookdoctor&uhid={{obj.id}}"
+                      >
+                        <strong style="color: #0a6b4c; cursor: pointer">
+                          <!---->
+                          {% if obj.patent_uhid != '0' %}
+                          <!---->
+                          {{obj.patent_uhid}}
+                          <!---->
+                          {% if obj.old_uhid != '0' %}
+                          <!---->
+                          <br /><s>{{obj.old_uhid}}</s>
+                          <!---->
+                          {% endif %}
+                          <br />
+                          {% endif%}
+                          <!---->
+                        </strong>
+                      </a>
+                      <!---->
+                      {{obj.date}}
+                      <!---->
+                    </td>
+                    <td>
+                      <strong>
+                        <!---->
+                        {{obj.first_name}}
+                        <!---->
+                        {% if obj.last_name != '-' %}
+                        <!---->
+                        {{obj.last_name}}
+                        <!---->
+                        {% endif%}
+                      </strong>
+                      <!---->
+                      {% if obj.gender != '-' %}
+                      <!---->
+                      <br />
+                      <!---->
+                      Gender - {{obj.gender}}
+                      <!---->
+                      {% endif%}
+                      <!---->
+                      {% if obj.age != 0 %}
+                      <!---->
+                      , Age - {{obj.age}} Years
+                      <!---->
+                      {% endif%}
+                      <!---->
+                      <b>
+                        {% if obj.mobile != '0' %}
+                        <!---->
+                        <br />
+                        <!---->
+                        {{obj.mobile}}
+                        <!---->
+                        {% endif%}
+                        <!---->
+                        {% if obj.alt_mobile != '0' %}
+                        <!---->
+                        , {{obj.alt_mobile}}
+                        <!---->
+                        {% endif%}
+                      </b>
+                      <!---->
+                      {% if obj.care_of_type != 0 or obj.care_of %}
+                      <br />
+                      {% if obj.care_of_type != 0 %}
+                      <!---->
+                      {{obj.care_of_type}},
+                      <!---->
+                      {% elif obj.care_of != '-' %}
+                      <!---->
+                      Parents :
+                      <!---->
+                      {% endif %}
+                      <!---->
+                      {% if obj.care_of != '-' %}
+                      <!---->
+                      {{obj.care_of}}
+                      <!---->
+                      {% endif %}
+                      <!---->
+                      {% endif %}
+                      <!---->
+                      <br />Address :
+                      <!---->
+                      {% if obj.address != '-' %}
+                      <!---->
+                      {{obj.address}}
+                      <!---->
+                      {% endif %}
+                      <!---->
+                      <br />
+                      <!---->
+                      {% if obj.city != '-' %}
+                      <!---->
+                      {{obj.city}},
+                      <!---->
+                      {% endif %}
+                      <!---->
+                      {% if obj.state != '-' %}
+                      <!---->
+                      {{obj.state}},
+                      <!---->
+                      {% endif %}
+                      <!---->
+                      {% if obj.country != '-' %}
+                      <!---->
+                      {{obj.country}}
+                      <!---->
+                      {% endif %}
+                      <!---->
+                      {% if obj.pin_code != '0' %}
+                      <!---->
+                      - {{obj.pin_code}}
+                      <!---->
+                      {% endif %}
+                      <br /><br />
+                      <a
+                        id="{{obj.id}}"
+                        href="javascript:void()"
+                        onclick="viewMore('{{obj.id}}')"
+                        >View More</a
+                      >
+                      <!---->
+                      {% if obj.patient_trt_list|length %}
+                      <table
+                        class="table table-bordered trt_data"
+                        id="D{{obj.id}}"
+                        style="display: none"
+                      >
+                        <thead style="background-color: #0a6b4c">
+                          <tr>
+                            <th style="color: #fff">Treatment ID</th>
+                            <th style="color: #fff">Date</th>
+                            <th style="color: #fff">Time</th>
+                            <th style="color: #fff">Therapy</th>
+                            <th style="color: #fff">Treatment Status</th>
+                            <th style="color: #fff">Bill Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for t in obj.patient_trt_list %}
+                          <tr>
+                            <td>{{t.id}}</td>
+                            <td>{{t.startdate}}</td>
+                            <td>{{t.time}}</td>
+                            <td>{{t.therapy_name}}</td>
+                            <td>{{t.status_name}}</td>
+                            <td>{{t.billing_status_name}}</td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                      {% endif %}
+                      <!---->
+                      <br /><br />
+                      <!---->
+                      {% if obj.pay_list|length %}
+                      <table
+                        class="table table-bordered trt_data"
+                        id="P{{obj.id}}"
+                        style="display: none"
+                      >
+                        <thead style="background-color: #0a6b4c">
+                          <tr>
+                            <th style="color: #fff">Date</th>
+                            <th style="color: #fff">Payment Type</th>
+                            <th style="color: #fff">Amount</th>
+                            <th style="color: #fff">Payment Mode</th>
+                            <th style="color: #fff">transaction Number</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for t in obj.pay_list %}
+                          <tr>
+                            <td>{{t.date}}</td>
+                            <td>{{t.title}}</td>
+                            <td>{{t.fee}}</td>
+                            <td>{{t.payment_type}}</td>
+                            <td>{{t.transaction_num}}</td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                      <br />
+                      <br />
+                      {% endif %}
+                      <!---->
+                      <table
+                        class="table table-bordered trt_data"
+                        id="T{{obj.id}}"
+                        style="display: none"
+                      >
+                        <thead style="background-color: #0a6b4c">
+                          <tr>
+                            <th style="color: #fff">Date</th>
+                            <th style="color: #fff">OPD No</th>
+                            <th style="color: #fff">IPD No</th>
+                            <th style="color: #fff">Disease</th>
+                            <th style="color: #fff">Doctor</th>
+                            <th style="color: #fff">Remark</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for t in obj.treatment %}
+                          <tr>
+                            <td>{{t.datetime}}</td>
+                            <td>{{t.opd_no}}</td>
+                            <td>{{t.ipd_no}}</td>
+                            <td>{{t.disease_name}}</td>
+                            <td>{{t.doctor}}</td>
+                            <td>
+                              <!---->
+                              {% if t.remark != '-' %}
+                              <!---->
+                              {{t.remark}} <br />
+                              <!---->
+                              {% if t.is_complete == 1%}
+                              <!---->
+                              <b>Check up done</b>
+                              <!---->
+                              {% endif %}
+                              <!---->
+                              {% endif %}
+                              <!---->
+                              {% if t.medicine != 0 %}
+                              <!---->
+                              <br />
+                              Medicine - {{t.medicine}} <br />
+                              <!---->
+                              {% endif %}
+                              <!---->
+                              {% if t.therapy != 0 %}
+                              <!---->
+                              Therapy - {{t.therapy}}
+                              <!---->
+                              {% endif %}
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </td>
+                    <td>
+                      <!---->
+                      {% if obj.referral_number != '0' %}
+                      <!---->
+                      Referral : {{obj.referral_number}}
+                      <!---->
+                      - {{obj.referral_date}}<br />
+                      <!---->
+                      {% endif %}
+                      <!---->
+                      {% if obj.disease != 0 %}
+                      <!---->
+                      Disease : {{obj.disease}} <br />
+                      <!---->
+                      {% endif %}
+                      <!---->
+                      {% if obj.health_card_type != 0 %}
+                      <!---->
+                      {{obj.health_card_type}}
+                      <!---->
+                      {% endif %}
+                      <!---->
+                      {% if obj.health_card_category != 0 %}
+                      <!---->
+                      <br />{{obj.health_card_category}}
+                      <!---->
+                      {% endif %}
+                      <!---->
+                      {% if obj.health_card_number != '0' %}
+                      <!---->
+                      {% if obj.health_card_number != '-' %}
+                      <!---->
+                      - {{obj.health_card_number}}
+                      <!---->
+                      {% endif %}
+                      <!---->
+                      {% endif %}
+                      {% if user_type.id != 8 and user_type.id != 7 %}
+                      <br /><br />
+                      <a
+                        href="/portal/dashboard/?page=bookdoctor&uhid={{obj.id}}"
+                        ><b>Book Doctor / Edit</b></a
+                      >
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- / Content -->
+    <div class="content-backdrop fade"></div>
+  </div>  
+</form>
+<script type="text/javascript">
+  var hctype = document.querySelector("#hctype");
+  var hctype_val = parseInt(hctype.value);
+  showHideHCTCat(hctype_val);
+  hctype.addEventListener("change", function () {
+    hctype_val = parseInt(hctype.value);
+    showHideHCTCat(hctype_val);
+  });
+
+  function exportData(){
+    var start_date = document.querySelector("#start_date").value;
+    var end_date = document.querySelector("#end_date").value;
+    var error = false;
+    if (start_date.length == 0 || end_date.length == 0) {
+      error = true;
+    }
+    if (error) {
+      document.querySelector("#errorBlock").style.display = "";
+    } else {
+      document.querySelector("#errorBlock").style.display = "none";
+      var url = "/portal/exportpatientdata/?start="+start_date+"&end="+end_date+"&em={{employee_id}}&ut={{user_type.id}}";
+      window.open(url, "_blank")
+    }    
+  }
+
+  function showHideHCTCat(hctype_val) {
+    if (hctype_val > 1) {
+      document.querySelector("#catofhct").style.display = "";
+      document.querySelector("#hcnum").style.display = "";
+    } else {
+      document.querySelector("#catofhct").style.display = "none";
+      document.querySelector("#hcnum").style.display = "none";
+    }
+  }
+  function validateForm() {
+    var start_date = document.querySelector("#start_date").value;
+    var end_date = document.querySelector("#end_date").value;
+    var error = false;
+    if (start_date.length == 0 || end_date.length == 0) {
+      error = true;
+    }
+    if (error) {
+      document.querySelector("#errorBlock").style.display = "";
+    } else {
+      document.querySelector("#errorBlock").style.display = "none";
+    }
+    return !error;
+  }
+  function viewMore(id) {
+    if (document.getElementById("T" + id).style.display == "none") {
+      document.getElementById(id).innerHTML = "Close";
+      document.getElementById("T" + id).style.display = "";
+      document.getElementById("P" + id).style.display = "";
+      document.getElementById("D" + id).style.display = "";
+    } else {
+      document.getElementById(id).innerHTML = "View More";
+      document.getElementById("T" + id).style.display = "none";
+      document.getElementById("P" + id).style.display = "none";
+      document.getElementById("D" + id).style.display = "none";
+    }
+  }
+</script>

@@ -1,0 +1,394 @@
+<div class="container-xxl flex-grow-1 container-p-y">
+  <div class="row">
+    <div class="col-lg-8 mb-4 order-0">
+      <div class="card">
+        <div class="d-flex align-items-end row">
+          <div class="col-sm-12">
+            <div class="card-body">
+              <h5 class="card-title text-primary">Welcome, {{ full_name }}</h5>
+              {% if user_type.id == 6 or user_type.id == 4 %}
+              <a href="/portal/dashboard?page=add-new-request">
+                <button type="button" class="btn btn-primary">
+                  Add New Request
+                </button>
+              </a>
+              {% endif %}
+              <!---->
+              {% if user_type.id == 5 %}
+              <a href="/portal/dashboard?page=add-new-request">
+                <button type="button" class="btn btn-primary">
+                  Add New Request
+                </button>
+              </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Total Revenue -->
+      {% if user_type.id == 2 or user_type.id == 7 or user_type.id == 8 %}
+      <br />
+      <div class="card">
+        <div class="row row-bordered g-0">
+          <div class="col-md-12">
+            <h5 class="card-header m-0 me-2 pb-3">Patient chart</h5>
+            <div id="totalRevenueChart" class="px-2"></div>
+          </div>
+        </div>
+      </div>
+      <!--/ Total Revenue -->
+      {% endif %}
+      <!-- Total Revenue -->
+      {% if user_type.id == 4 %}
+      <br />
+      <div class="card">
+        <div class="row row-bordered g-0">
+          <div class="col-md-12">
+            <div class="table-responsive text-nowrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Employee</th>
+                    <th>{{data_set_1_title}}</th>
+                    <th>{{data_set_2_title}}</th>
+                    <th>Clinic</th>
+                  </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                  {% for em in emp_arr %}
+                  <tr>
+                    <td>{{em.employee_name}}</td>
+                    <td><span style="color: #0a6b4c">{{em.data_1}}</span> / <span style="color: #e2821d;">{{em.data_1_all}}</span></td>
+                    <td><span style="color: #0a6b4c">{{em.data_2}}</span> / <span style="color: #e2821d;">{{em.data_2_all}}</span></td>
+                    <td>
+                      <span style="font-size: 10px">{{data_set_3_title}}</span>
+                      : <span style="color: #0a6b4c">{{em.data_3}}</span> / <span style="color: #e2821d;">{{em.data_3_all}}</span><br />
+                      <span style="font-size: 10px">{{data_set_4_title}}</span>
+                      : <span style="color: #0a6b4c">{{em.data_4}}</span> / <span style="color: #e2821d;">{{em.data_4_all}}</span>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--/ Total Revenue -->
+      {% endif %}
+    </div>
+    <div class="col-lg-4 col-md-4 order-1">
+      <h5 class="card-header m-0 me-2 pb-3">Data of <span style="color: #0a6b4c">{{monthname}}</span> / <span style="color: #e2821d;">All</span> month</h5>
+      <div class="row">
+        <div class="col-lg-6 col-md-12 col-6 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <div
+                class="card-title d-flex align-items-start justify-content-between"
+              >
+                <div class="avatar flex-shrink-0">
+                  <img
+                    src="/static/hospital/assets/img/icons/unicons/chart-success.png"
+                    alt="Today"
+                    class="rounded"
+                  />
+                </div>
+                <div class="dropdown">
+                  <button
+                    class="btn p-0"
+                    type="button"
+                    id="cardOpt3"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <i class="bx bx-dots-vertical-rounded"></i>
+                  </button>
+                  <div
+                    class="dropdown-menu dropdown-menu-end"
+                    aria-labelledby="cardOpt3"
+                  >
+                    <a
+                      class="dropdown-item"
+                      href="/portal/dashboard?page=view&type=1&emp={{employee_id}}&ut={{user_type.id}}"
+                      >View More</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <span style="font-size: 14px">{{data_set_1_title}}</span>
+              <h3 class="card-title mb-2"><span style="color: #0a6b4c">{{data_set_1}}</span> / <span style="color: #e2821d;">{{data_set_1_all}}</span></h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-12 col-6 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <div
+                class="card-title d-flex align-items-start justify-content-between"
+              >
+                <div class="avatar flex-shrink-0">
+                  <img
+                    src="/static/hospital/assets/img/icons/unicons/chart-success.png"
+                    alt="Card"
+                    class="rounded"
+                  />
+                </div>
+                <div class="dropdown">
+                  <button
+                    class="btn p-0"
+                    type="button"
+                    id="cardOpt6"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <i class="bx bx-dots-vertical-rounded"></i>
+                  </button>
+                  <div
+                    class="dropdown-menu dropdown-menu-end"
+                    aria-labelledby="cardOpt6"
+                  >
+                    <a
+                      class="dropdown-item"
+                      href="/portal/dashboard?page=view&type=2&emp={{employee_id}}&ut={{user_type.id}}"
+                      >View More</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <span style="font-size: 14px">{{data_set_2_title}}</span>
+              <h3 class="card-title text-nowrap mb-1"><span style="color: #0a6b4c">{{data_set_2}}</span> / <span style="color: #e2821d;">{{data_set_2_all}}</span></h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% if user_type.id != 9 %}
+      <div class="row">
+        <div class="col-6 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <div
+                class="card-title d-flex align-items-start justify-content-between"
+              >
+                <div class="avatar flex-shrink-0">
+                  <img
+                    src="/static/hospital/assets/img/icons/unicons/chart-success.png"
+                    alt="Card"
+                    class="rounded"
+                  />
+                </div>
+                <div class="dropdown">
+                  <button
+                    class="btn p-0"
+                    type="button"
+                    id="cardOpt4"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <i class="bx bx-dots-vertical-rounded"></i>
+                  </button>
+                  <div
+                    class="dropdown-menu dropdown-menu-end"
+                    aria-labelledby="cardOpt4"
+                  >
+                    <a
+                      class="dropdown-item"
+                      href="/portal/dashboard?page=view&type=3&emp={{employee_id}}&ut={{user_type.id}}"
+                      >View More</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <span style="font-size: 14px">{{data_set_3_title}}</span>
+              <h3 class="card-title text-nowrap mb-2"><span style="color: #0a6b4c">{{data_set_3}}</span> / <span style="color: #e2821d;">{{data_set_3_all}}</span></h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <div
+                class="card-title d-flex align-items-start justify-content-between"
+              >
+                <div class="avatar flex-shrink-0">
+                  <img
+                    src="/static/hospital/assets/img/icons/unicons/chart-success.png"
+                    alt="Card"
+                    class="rounded"
+                  />
+                </div>
+                <div class="dropdown">
+                  <button
+                    class="btn p-0"
+                    type="button"
+                    id="cardOpt1"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <i class="bx bx-dots-vertical-rounded"></i>
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="cardOpt1">
+                    <a
+                      class="dropdown-item"
+                      href="/portal/dashboard?page=view&type=4&emp={{employee_id}}&ut={{user_type.id}}"
+                      >View More</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <span style="font-size: 14px">{{data_set_4_title}}</span>
+              <h3 class="card-title mb-2"><span style="color: #0a6b4c">{{data_set_4}}</span> / <span style="color: #e2821d;">{{data_set_4_all}}</span></h3>
+            </div>
+          </div>
+        </div>
+        {% if user_type.id == 2 or user_type.id == 7 or user_type.id == 8 %}
+        <div class="col-6 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <div
+                class="card-title d-flex align-items-start justify-content-between"
+              >
+                <div class="avatar flex-shrink-0">
+                  <img
+                    src="/static/hospital/assets/img/icons/unicons/chart-success.png"
+                    alt="Card"
+                    class="rounded"
+                  />
+                </div>
+                <div class="dropdown">
+                  <button
+                    class="btn p-0"
+                    type="button"
+                    id="cardOpt1"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <i class="bx bx-dots-vertical-rounded"></i>
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="cardOpt1">
+                    <a
+                      class="dropdown-item"
+                      href="/portal/dashboard?page=view&type=5&emp={{employee_id}}&ut={{user_type.id}}"
+                      >View More</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <span style="font-size: 14px">{{data_set_5_title}}</span>
+              <h3 class="card-title mb-2"><span style="color: #0a6b4c">{{data_set_5}}</span> / <span style="color: #e2821d;">{{data_set_5_all}}</span></h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <div
+                class="card-title d-flex align-items-start justify-content-between"
+              >
+                <div class="avatar flex-shrink-0">
+                  <img
+                    src="/static/hospital/assets/img/icons/unicons/chart-success.png"
+                    alt="Card"
+                    class="rounded"
+                  />
+                </div>
+                <div class="dropdown">
+                  <button
+                    class="btn p-0"
+                    type="button"
+                    id="cardOpt1"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <i class="bx bx-dots-vertical-rounded"></i>
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="cardOpt1">
+                    <a
+                      class="dropdown-item"
+                      href="/portal/dashboard?page=view&type=6&emp={{employee_id}}&ut={{user_type.id}}"
+                      >View More</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <span style="font-size: 14px">{{data_set_6_title}}</span>
+              <h3 class="card-title mb-2"><span style="color: #0a6b4c">{{data_set_6}}</span> / <span style="color: #e2821d;">{{data_set_6_all}}</span></h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <div
+                class="card-title d-flex align-items-start justify-content-between"
+              >
+                <div class="avatar flex-shrink-0">
+                  <img
+                    src="/static/hospital/assets/img/icons/unicons/chart-success.png"
+                    alt="Card"
+                    class="rounded"
+                  />
+                </div>
+                <div class="dropdown">
+                  <button
+                    class="btn p-0"
+                    type="button"
+                    id="cardOpt1"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <i class="bx bx-dots-vertical-rounded"></i>
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="cardOpt1">
+                    <a
+                      class="dropdown-item"
+                      href="/portal/dashboard?page=view&type=7&emp={{employee_id}}&ut={{user_type.id}}"
+                      >View More</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <span style="font-size: 14px">{{data_set_7_title}}</span>
+              <h3 class="card-title mb-2"><span style="color: #0a6b4c">{{data_set_7}}</span> / <span style="color: #e2821d;">{{data_set_7_all}}</span></h3>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<input type="hidden" id="new_str" value="{{chart_data.new_str}}" />
+<input type="hidden" id="new_1" value="{{chart_data.new_1}}" />
+<input type="hidden" id="new_2" value="{{chart_data.new_2}}" />
+<input type="hidden" id="new_3" value="{{chart_data.new_3}}" />
+<input type="hidden" id="new_4" value="{{chart_data.new_4}}" />
+<input type="hidden" id="new_5" value="{{chart_data.new_5}}" />
+<input type="hidden" id="new_6" value="{{chart_data.new_6}}" />
+<input type="hidden" id="new_7" value="{{chart_data.new_7}}" />
+<input type="hidden" id="new_8" value="{{chart_data.new_8}}" />
+<input type="hidden" id="new_9" value="{{chart_data.new_9}}" />
+<input type="hidden" id="new_10" value="{{chart_data.new_10}}" />
+<input type="hidden" id="new_11" value="{{chart_data.new_11}}" />
+<input type="hidden" id="new_12" value="{{chart_data.new_12}}" />
+
+<input type="hidden" id="old_str" value="{{chart_data.old_str}}" />
+<input type="hidden" id="old_1" value="{{chart_data.old_1}}" />
+<input type="hidden" id="old_2" value="{{chart_data.old_2}}" />
+<input type="hidden" id="old_3" value="{{chart_data.old_3}}" />
+<input type="hidden" id="old_4" value="{{chart_data.old_4}}" />
+<input type="hidden" id="old_5" value="{{chart_data.old_5}}" />
+<input type="hidden" id="old_6" value="{{chart_data.old_6}}" />
+<input type="hidden" id="old_7" value="{{chart_data.old_7}}" />
+<input type="hidden" id="old_8" value="{{chart_data.old_8}}" />
+<input type="hidden" id="old_9" value="{{chart_data.old_9}}" />
+<input type="hidden" id="old_10" value="{{chart_data.old_10}}" />
+<input type="hidden" id="old_11" value="{{chart_data.old_11}}" />
+<input type="hidden" id="old_12" value="{{chart_data.old_12}}" />
